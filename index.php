@@ -1,5 +1,11 @@
 <?php 
     include 'includes/conexao.php';
+
+    $query = "SELECT * FROM users_comments JOIN users ON users_comments.user_id = users.id";
+    $stmt = $conn -> prepare($query);
+    $stmt -> execute();
+    $comments = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+   
 ?>
 <!doctype html>
 <html lang="pt-pt">
@@ -65,6 +71,10 @@
         <!--box-container-->
 
         <div class="client-box-container">
+            <?php 
+                if($comments > 0 ):
+                    foreach($comments as $comment):
+            ?>
             <!--box-->
             <div class="client-box">
                 <!--profile-->
@@ -73,8 +83,8 @@
                     <img src="./assets/img/client-1.jpg" alt="client">
                     <!--text-->
                     <div class="profile-text">
-                        <strong>James Mcavoy</strong>
-                        <span>CEO</span>
+                        <strong><?=$comment['nome']?></strong>
+                        <span><?= $comment['tipo']?></span>
                     </div>
                 </div>
 
@@ -88,58 +98,13 @@
                 </div>
 
                 <!--comments-->
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam hic iure earum atque vero odit iste dolore tenetur, magnam excepturi unde, rem aperiam aut at perferendis. Incidunt minus dolorum hic?</p>
+                <p><?=$comment['comment_id']?></p>
             </div>
-            <!--box-->
-            <div class="client-box">
-                <!--profile-->
-                <div class="client-profile">
-                    <!--Img-->
-                    <img src="./assets/img/client-2.jpg" alt="client">
-                    <!--text-->
-                    <div class="profile-text">
-                        <strong>Jonh Doe</strong>
-                        <span>Software Developer</span>
-                    </div>
-                </div>
-
-                <!--Rating-->
-                <div class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-
-                <!--comments-->
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam hic iure earum atque vero odit iste dolore tenetur, magnam excepturi unde, rem aperiam aut at perferendis. Incidunt minus dolorum hic?</p>
-            </div>
-            <!--box-->
-            <div class="client-box">
-                <!--profile-->
-                <div class="client-profile">
-                    <!--Img-->
-                    <img src="./assets/img/client-3.jpg" alt="client">
-                    <!--text-->
-                    <div class="profile-text">
-                        <strong>Jane Doe</strong>
-                        <span>Marketer</span>
-                    </div>
-                </div>
-
-                <!--Rating-->
-                <div class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-
-                <!--comments-->
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam hic iure earum atque vero odit iste dolore tenetur, magnam excepturi unde, rem aperiam aut at perferendis. Incidunt minus dolorum hic?</p>
-            </div>
+            <?php 
+                endforeach; 
+                endif;
+                ?>
+            
         </div>
 
 
