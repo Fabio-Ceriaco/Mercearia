@@ -31,39 +31,9 @@
             include 'includes/header.php';
         ?>
     
-    <div class="result">ksdjgksdfksf</div>
-    <!-- Pesquisa de produtos -->
-    <section id="search-banner">
-        <!--bg-->
-        <img src="./assets/img/bg-1.png" class="bg-1" alt="bg">
-        <img src="./assets/img/bg-2.png" class="bg-2" alt="bg-2">
-
-        <!--Text-->
-        <div class="search-banner-text">
-            <h1>Encomende as suas Compras</h1>
-            <strong>#Entrega Grátis</strong>
-
-
-            <!--search-box-->
-            <form action="" class="search-box">
-                <!--search-icon-->
-                <i class="fas fa-search"></i>
-                <!--input-->
-                <input type="text" class="search-input" placeholder="Pesquise o seu produto" name="search" required>
-                <!--btn-->
-                <input type="submit" class="search-btn" value="Search">
-            </form>
-        </div>
-
-        
-    </section>
-    
-    
-
+    <div class="result"></div>
+   
     <section id="content"></section>
-
-
-      
 
         <!-- Clients-->
 
@@ -112,8 +82,6 @@
                 ?>
             
         </div>
-
-
     </section>
 
     <!--Partnre-logo-->
@@ -138,6 +106,6 @@
     <?php 
     include 'includes/footer.php'
      ?>
-    <script type="text/javascript" src="./assets/js/script.js"></script>
+    <script type="text/javascript" src="./assets/js/scripts.js"></script>
   </body>
 </html>

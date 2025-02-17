@@ -1,5 +1,6 @@
 <?php 
     include 'includes/conexao.php';
+    
 
     if(!isset($_SESSION)){
         session_start();
@@ -56,7 +57,7 @@
                 <span class="preco"><?= strip_tags(number_format($produto['preco'], 2, ','))?></span>
 
                 <!--cart-btn--->
-                <a href="# " data-id="<?= strip_tags($produto['id'])?>" class="cart-btn" ><i class="fas fa-shopping-bag"></i>Add To Cart</a>
+                <a data-id="<?= strip_tags($produto['id'])?>" class="cart-btn" ><i class="fas fa-shopping-bag"></i>Add To Cart</a>
             </div>
         <?php 
             endforeach;        
