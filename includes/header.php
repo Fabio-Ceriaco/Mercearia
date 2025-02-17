@@ -1,3 +1,27 @@
+<?php
+    include 'conexao.php';
+
+    if(!isset($_SESSION)){
+        session_start();
+        
+    } 
+
+    try{
+        $query = 'SELECT quantidade, carrinho.preco, produtos.nome AS nome_produto, user_id FROM carrinho JOIN produtos ON carrinho.produto_id = produtos.id JOIN users ON carrinho.user_id = users.id';
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+        $count = $stmt->rowCount();
+        $carrinho = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }catch(PDOException $e){
+        die('Não foi possível realizar a consulta a base de dados: '. htmlspecialchars($e->getMessage()));
+    }
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="pt-pt">
   <head>
@@ -12,7 +36,7 @@
   </head>
 <body>
     <!--Barra de navegação-->
-    <nav >
+    <nav  >
         <!--Logo-->
         <a href="populares" class="logo" id="logo">
             <span>M</span>ercearia
@@ -33,9 +57,19 @@
 
         <!--cart-->
         <div class="cart">
-            <a href="#" class="cart"><i class="fa-solid fa-cart-shopping"></i><span>0</span></a>
-            <div class="cart-content">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quam hic iure earum atque vero odit iste dolore tenetur, magnam excepturi unde, rem aperiam aut at perferendis. Incidunt minus dolorum hic?
-                <span>Total: </span>
+            <a href="#" class="cart"><i class="fa-solid fa-cart-shopping"></i><span><?= $count ?></span></a>
+            <div class="cart-content">
+                <?php
+                $total = 0;
+                 foreach($carrinho as $c):?>
+                    <div style="display: flex; flex-direction: row; justify-content: space-between; border-top: 1px solid #000; padding: 5px;">
+                        <span> <?=strip_tags($c['nome_produto'])?></span>
+                        <span> <?=strip_tags($c['quantidade'])?></span>
+                        <span> <?=strip_tags($c['preco'])?> €</span>
+                    </div>
+                    <?php $total += $c['preco'] * $c['quantidade']?>
+                <?php endforeach;?>
+                <span id="total">Total: <?= strip_tags(number_format($total, 2, ',')) ?> €  </span>
             </div>
         </div>
 

@@ -49,14 +49,14 @@
         ?>
             <!--box-->
             <div class="produtos-box">
-                <input type="hidden" name="id" value="<?=$produto['id']?>">
+                <input type="hidden" name="id" value="<?=strip_tags($produto['id'])?>">
                 <img src="./assets/img/apple.png" alt="apple">
-                <strong><?=$produto['nome'] ?></strong>
+                <strong><?=strip_tags($produto['nome']) ?></strong>
                 <span class="quantidade">1 Kg</span>
-                <span class="preco"><?= $produto['preco']?></span>
+                <span class="preco"><?= strip_tags(number_format($produto['preco'], 2, ','))?></span>
 
                 <!--cart-btn--->
-                <a href="?adicionar=<?=$produto['id']?>" class="cart-btn" ><i class="fas fa-shopping-bag"></i>Add To Cart</a>
+                <a href="# " data-id="<?= strip_tags($produto['id'])?>" class="cart-btn" ><i class="fas fa-shopping-bag"></i>Add To Cart</a>
             </div>
         <?php 
             endforeach;        

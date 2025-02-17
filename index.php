@@ -1,10 +1,17 @@
 <?php 
     include 'includes/conexao.php';
+    if(!isset($_SESSION)){
+        session_start();
+    }
 
-    $query = "SELECT * FROM users_comments JOIN users ON users_comments.user_id = users.id";
-    $stmt = $conn -> prepare($query);
-    $stmt -> execute();
-    $comments = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    try{
+        $query = "SELECT * FROM users_comments JOIN users ON users_comments.user_id = users.id";
+        $stmt = $conn -> prepare($query);
+        $stmt -> execute();
+        $comments = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    }catch(PDOException $e){
+        die('Não foi possível realizar a consulta a base de dados: ' . htmlspecialchars($e->getMessage()));
+    }
    
 ?>
 <!doctype html>
@@ -17,15 +24,14 @@
     <title>Mercearia</title>
     <script src="https://kit.fontawesome.com/f98569bb37.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
- 
-  
+   
   </head>
   <body>
         <?php 
             include 'includes/header.php';
         ?>
     
-
+    <div class="result">ksdjgksdfksf</div>
     <!-- Pesquisa de produtos -->
     <section id="search-banner">
         <!--bg-->
