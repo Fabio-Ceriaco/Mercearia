@@ -1,17 +1,4 @@
-<!doctype html>
-<html lang="pt-pt">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="site Mercearia">
-    <meta name="author" content="Fábio Ceriaco">
-    <title>Mercearia</title>
-    <script src="https://kit.fontawesome.com/f98569bb37.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-  
-  </head>
-  <body>
          <!-- Pesquisa de produtos -->
         <section id="search-banner">
                 <!--bg-->
@@ -229,5 +216,3 @@
                 </div>
         </section>
         
-  </body>
-</html>

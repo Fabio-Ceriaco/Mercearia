@@ -9,7 +9,7 @@
     } 
 
     try{
-        $carts = $conn->prepare('SELECT produtos.nome As nomeproduto, quantidade, carrinho.preco  FROM carrinho join produtos ON carrinho.produto_id = produtos.id');
+        $carts = $conn->prepare('SELECT carrinho.id, produtos.nome As nomeproduto, quantidade, carrinho.preco  FROM carrinho join produtos ON carrinho.produto_id = produtos.id');
         $carts ->execute();
         $count = $carts->rowCount();
     }catch(PDOException $e){
@@ -21,19 +21,7 @@
 
 
 
-<!DOCTYPE html>
-<html lang="pt-pt">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="site Mercearia">
-    <meta name="author" content="Fábio Ceriaco">
-    <title>Mercearia</title>
-    <script src="https://kit.fontawesome.com/f98569bb37.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="./assets/style/style.css">
-  </head>
-<body>
+
     <!--Barra de navegação-->
     <nav  >
         <!--Logo-->
@@ -55,9 +43,10 @@
         </ul>
 
         <!--cart-->
-        <div class="cart">
-            <a href="#" class="cart"><i class="fa-solid fa-cart-shopping"></i><span><?= $count ?></span></a>
-            <div class="cart-content">
+        <div class="cart" >
+            <a href="#" class="cart" id="cart"><i class="fa-solid fa-cart-shopping"></i><span><?= $count ?></span></a>
+        </div>
+        <div class="cart-content" id="cart-content">
                 <?php
                 $total = 0;
                 if($carts->rowCount() == 0):?>
@@ -65,23 +54,25 @@
                 <?php else:?>
                 <?php
                  foreach($carts as $cart):?>
-                    <div style="display: flex; flex-direction: row; justify-content: space-between; border-top: 1px solid #000; padding: 5px;">
+                    <div class="in-cart-content">
                         <span> <?=strip_tags($cart['nomeproduto'])?></span>
-                        <span> <?=strip_tags($cart['quantidade'])?></span>
+                        <div class="cart-quantity">
+                            <input type="button" value="-" class="minus">
+                            <span> <?=strip_tags($cart['quantidade'])?></span>
+                            <input type="button" value="+" class="plus">
+                        </div>
                         <span> <?=strip_tags($cart['preco'])?> €</span>
+                        <input type="button" data-id="<?=$cart['id']?>" value="X" class="remove">
                     </div>
                 
                     <?php $total += $cart['preco']?>
                 <?php endforeach;?>
                 <?php endif;?>
                 <span id="total">Total: <?= strip_tags(number_format($total, 2, ',')) ?> €  </span>
-                <a href="#" class="">Checkout</a>
+                <input class="checkout-btn" type="button" value="Checkout">
             </div>
-        </div>
 
         <div class="signin" id="signin">
             <input type="submit" value="Log/Sign in" class="log-btn" >
         </div>
     </nav>
-</body>
-</html>
