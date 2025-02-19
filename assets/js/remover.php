@@ -17,6 +17,9 @@
             echo json_encode($message);
             return;
         }*/
+        $stmt = $conn->prepare('SELECT count(*) AS nLinas FROM carrinho');
+        $stmt->execute();
+        $count = $stmt->fetch(PDO::FETCH_ASSOC)['nLinas'];
 
         //selecta a tabela carrinho para obter o produto a remover
         $produtoCarrinho = $conn->prepare("SELECT * FROM carrinho WHERE id = :id");
@@ -27,6 +30,7 @@
         //obter id do produto e quantidade
         $produto_id = $produtoCarrinho['produto_id'];
         $produto_quantidade = $produtoCarrinho['quantidade'];
+        $produto_preco = $produtoCarrinho['preco'];
 
 
         //fazer select a tabela produto para obter stock atual do produto
@@ -44,6 +48,10 @@
         $delete = $conn->prepare('DELETE FROM carrinho WHERE id = :id');
         $delete->bindParam(':id', $value, PDO::PARAM_INT);
         $delete->execute();
+
+        $query = $conn->prepare('SELECT sum(preco) AS total FROM carrinho');
+        $query->execute();
+        $total = $query->fetch(PDO::FETCH_ASSOC)['total'  ];
         
        
         if($delete->rowCount() > 0){
@@ -54,11 +62,16 @@
             $updateStock->bindParam(':stock', $newStock, PDO::PARAM_STR);
             $updateStock->execute();
 
+            
+
 
             $message = [
                 'message' => 'Produto removido com sucesso',
                 'status' =>'success',
-                'redirect' => ''
+                'redirect' => '',
+                'count' => $count - 1,
+                'total' => $total ? $total : '0.00',
+                'produto_id' => $value
             ];
         }else{
             $message = [

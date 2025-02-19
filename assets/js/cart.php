@@ -20,6 +20,11 @@
         $products->bindParam(':id', $value, PDO::PARAM_INT);
         $products->execute();
         
+        $stmt = $conn->prepare('SELECT count(*) AS nLinas, sum(preco) AS total FROM carrinho');
+        $stmt->execute();
+        $count = $stmt->fetch(PDO::FETCH_ASSOC)['nLinas'];
+
+        
         
         foreach($products as $product){
 
@@ -29,6 +34,7 @@
             $product_preco = strip_tags($product['preco']);
             $product_stock = strip_tags($product['stock']);
             $product_descricao = strip_tags($product['descricao']);
+            $produto_imagem = strip_tags($product['imagem']);
           
             if($product_stock <= 0){
 
@@ -46,7 +52,7 @@
                 $carts = $conn->prepare('SELECT * FROM carrinho WHERE produto_id = :produto_id');
                 $carts->bindParam(':produto_id', $product_id, PDO::PARAM_INT);
                 $carts ->execute();
-        
+                
                 
                 
                     
@@ -54,7 +60,7 @@
                         
                        //produto não existe no carrinho, adicionar
                         $nova_quantidade = 1;
-                        $novo_valor = $product_preco * $nova_quantidade;
+                        $novo_valor = number_format($product_preco * $nova_quantidade, 2, ',', '');
                         $create = $conn->prepare('INSERT INTO carrinho ( produto_id, quantidade, preco) VALUES ( :produto_id, :quantidade, :preco)');
                         $create->bindParam(':produto_id', $product_id, PDO::PARAM_INT);
                         $create->bindParam(':quantidade', $nova_quantidade, PDO::PARAM_INT);
@@ -69,10 +75,18 @@
                         $stock->execute();
                         
                         if($create){
+                            $query = $conn->prepare('SELECT sum(preco) AS total FROM carrinho');
+                            $query->execute();
+                            $total = $query->fetch(PDO::FETCH_ASSOC)['total'];
                             $message = [
                                 'message' => "$product_name adicionado ao carrinho",
                                 'status' => 'success',
-                                'redirect' => ''
+                                'redirect' => '',
+                                'count' => $count + 1,
+                                'total' => $total,
+                                'nome_produto' => $product_name,
+                                'imagem' => $produto_imagem,
+                                'quantidadeemcarrinho' => $cart_quantidade
                                 
                             ];
                         
@@ -89,7 +103,7 @@
                         //produto existe no carrinho, incrementar a quantidade
                         $cart = $carts->fetch(PDO::FETCH_ASSOC);
                         $cart_quantidade = strip_tags($cart['quantidade'] + 1);
-                        $value = $product_preco * $cart_quantidade;
+                        $value = number_format($product_preco * $cart_quantidade, 2, ',', '');
                         $stockToUp = $product_stock - 1;
                         
         
@@ -106,12 +120,22 @@
                         $stockNew->bindParam(':stock', $stockToUp, PDO::PARAM_INT);
                         $stockNew->bindParam(':id', $product_id, PDO::PARAM_INT);
                         $stockNew->execute();
-        
+
+
+                        
                         if($stockNew){
+                            $query = $conn->prepare('SELECT sum(preco) AS total FROM carrinho');
+                            $query->execute();
+                            $total = $query->fetch(PDO::FETCH_ASSOC)['total'];
                             $message = [
                                 'message' => "$product_name adicionado ao carrinho",
                                 'status' => 'success',
-                                'redirect' => ''
+                                'redirect' => '',
+                                'count' => $count,
+                                'total' => $total,
+                                'nome_produto' => $product_name,
+                                'imagem' => $produto_imagem,
+                                'quantidadeemcarrinho' => $cart_quantidade
                             ];
                             
                         }else{

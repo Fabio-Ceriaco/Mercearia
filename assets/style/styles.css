@@ -63,7 +63,7 @@ nav {
   position: relative;
   
 }
-.cart a span {
+.cart a input {
   position: absolute;
   top: -7px;
   right: -7px;
@@ -77,6 +77,9 @@ nav {
   font-size: 0.6rem;
   font-weight: 500;
   background-color: #4eb060;
+  text-align: center;
+  cursor: pointer;
+  border: none;
 }
 .cart-content {
   position: absolute;
@@ -96,6 +99,7 @@ nav {
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: translate(-50%, -5px);
+  
 }
 .cart-content::before {
   content: "";
@@ -107,17 +111,52 @@ nav {
   border-color: transparent transparent #fff transparent;
   transform: translateX(-50%);
 }
-
-.cart-content #total {
+.in-cart{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.cart-content span{
   border-top: 1px solid black;
+}
+ #total {
+  border: none;
   padding: 5px;
+}
+.prod-nome, .prod-preco{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  font-size: .7rem;
+  border: none;
+  text-align: center;
+}
+#total:focus, #count:focus, .quantidade:focus, .prod-nome:focus, .prod-preco:focus {
+  outline: none;
 }
 .in-cart-content{
   display: flex; 
   flex-direction: row; 
   justify-content: space-between; 
+  align-items: center;
   border-top: 1px solid #000;
   padding: 5px;
+  
+}
+.in-cart-content img{
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  object-position: center;
+}
+.in-cart-content span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #000;
 }
 
 .cart-quantity{
@@ -126,15 +165,26 @@ nav {
   justify-content: space-between;
   align-items: center;
   width: 50px;
-  height: 20px;
+  height: 30px;
   padding: 5px;
   }
+ .quantidade{
+  width: 30px;
+  height: 20px;
+  border: none;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
 .minus, .plus{
   width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  height: 50px;
+  border: none;
   background-color: #fff;
-  border: 1px solid #ccc;
+  
   cursor: pointer;
   transition: all ease 0.3s;
   }

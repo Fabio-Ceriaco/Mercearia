@@ -39,6 +39,8 @@ $(document).ready(function () {
       $('#cart-content').css('display', 'none');
     }
     });
+
+    
   
   });
 
@@ -66,8 +68,12 @@ $(document).ready(function () {
               $('.result').text('');
                if (data['status'] ==='success') {
                     console.log(textStatus);
+                    console.log(data);
                    $('.result').append(`<div class="${data['status']}"><span class="fa fa-check-circle"></span>${data['message']}</div>`);
                    $('.result').show();
+                   $('#count').attr('value', data['count']);
+                   $('#total').attr('value', `${data['total']} €`);
+                   $('.prod-img').attr('src', data['imagem']);
                }else if (data['status'] === 'info') {
                    $('.result').append(`<div class="${data['status']}"><span class="fa fa-info-circle"></span>${data['message']}</div>`);	
                    $('.result').show();
@@ -111,13 +117,22 @@ $(document).ready(function () {
           data: {id:id},
           dataType: 'JSON',
           success: function (data, textStatus, jqXHR) {
-              console.log(textStatus);
               $('.result').text('');
              if (data['status'] ==='success') {
                   console.log(textStatus);
+                  console.log(data);
                  $('.result').append(`<div class="${data['status']}"><span class="fa fa-check-circle"></span>${data['message']}</div>`);
                  $('.result').show();
-                 console.log(jqXHR);
+                 $('#count').attr('value', data['count']);
+                 $('#total').attr('value', `${data['total']} €`);
+                 if(data['count'] <= 0){
+                  $('.cart-content').prepend('<span>Carrinho vazio</span>');
+                  $(`#${data['produto_id']}`).remove();
+                 
+                 }else{
+                  $(`#${data['produto_id']}`).remove();
+                 }
+                 
              }else if (data['status'] === 'info') {
                  $('.result').append(`<div class="${data['status']}"><span class="fa fa-info-circle"></span>${data['message']}</div>`);	
                  $('.result').show();
@@ -140,6 +155,11 @@ $(document).ready(function () {
       });
       
 })
+
+  $('.cart').on('click', function (e) { 
+    e.preventDefault();
+    $('#cart-content').load('assets/js/cartContent.php');
+  });
 
 });
 

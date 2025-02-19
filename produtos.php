@@ -38,7 +38,7 @@
             <!--box-->
             <div class="produtos-box">
                 <input type="hidden" name="id" value="<?=strip_tags($produto['id'])?>">
-                <img src="./assets/img/apple.png" alt="apple">
+                <img src="<?=$produto['imagem']?>" alt="apple">
                 <strong><?=strip_tags($produto['nome']) ?></strong>
                 <span class="quantidade">1 Kg</span>
                 <span class="preco"><?= strip_tags(number_format($produto['preco'], 2, ','))?></span>
