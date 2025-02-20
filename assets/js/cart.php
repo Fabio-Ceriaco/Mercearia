@@ -20,7 +20,7 @@
         $products->bindParam(':id', $value, PDO::PARAM_INT);
         $products->execute();
         
-        $stmt = $conn->prepare('SELECT count(*) AS nLinas, sum(preco) AS total FROM carrinho');
+        $stmt = $conn->prepare('SELECT count(*) AS nLinas FROM carrinho');
         $stmt->execute();
         $count = $stmt->fetch(PDO::FETCH_ASSOC)['nLinas'];
 
@@ -40,7 +40,7 @@
 
                 $message = [
                     'message' => 'Produto Esgotado',
-                    'status' => 'warning',
+                    'status' => 'error',
                     'redirect' => '' 
                 ];
                 echo json_encode($message);
@@ -54,7 +54,7 @@
                 $carts ->execute();
                 
                 
-                
+              
                     
                    if($carts->rowCount() == 0){
                         
@@ -75,6 +75,12 @@
                         $stock->execute();
                         
                         if($create){
+                            $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, quantidade, carrinho.preco,
+                             produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
+                            $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+                            $query->execute();
+                            $cart_items = $query->fetchAll(PDO::FETCH_ASSOC);
+                           
                             $query = $conn->prepare('SELECT sum(preco) AS total FROM carrinho');
                             $query->execute();
                             $total = $query->fetch(PDO::FETCH_ASSOC)['total'];
@@ -82,11 +88,11 @@
                                 'message' => "$product_name adicionado ao carrinho",
                                 'status' => 'success',
                                 'redirect' => '',
+                                'cart_items' => $cart_items,
                                 'count' => $count + 1,
                                 'total' => $total,
-                                'nome_produto' => $product_name,
-                                'imagem' => $produto_imagem,
-                                'quantidadeemcarrinho' => $cart_quantidade
+                                
+                                
                                 
                             ];
                         
@@ -124,6 +130,13 @@
 
                         
                         if($stockNew){
+                            $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, carrinho.quantidade, carrinho.preco,
+                             produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
+                            $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+                            $query->execute();
+                            $cart_items = $query->fetchAll(PDO::FETCH_ASSOC);
+                            
+                            
                             $query = $conn->prepare('SELECT sum(preco) AS total FROM carrinho');
                             $query->execute();
                             $total = $query->fetch(PDO::FETCH_ASSOC)['total'];
@@ -131,12 +144,12 @@
                                 'message' => "$product_name adicionado ao carrinho",
                                 'status' => 'success',
                                 'redirect' => '',
+                                'cart_items' => $cart_items,
                                 'count' => $count,
                                 'total' => $total,
-                                'nome_produto' => $product_name,
-                                'imagem' => $produto_imagem,
-                                'quantidadeemcarrinho' => $cart_quantidade
+                                
                             ];
+                            
                             
                         }else{
                             $message = [
@@ -147,10 +160,10 @@
                             
                         }
                     }
-        
+                
             
 
-       
+                    
             echo json_encode($message);
 
        

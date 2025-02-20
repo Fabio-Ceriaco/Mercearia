@@ -64,26 +64,48 @@ $(document).ready(function () {
             type: 'POST',
             data: {id:id},
             dataType: 'JSON',
-            success: function (data, textStatus, jqXHR) {
+            success: function (response, textStatus, jqXHR) {
               $('.result').text('');
-               if (data['status'] ==='success') {
+               if (response.status ==='success') {
                     console.log(textStatus);
-                    console.log(data);
-                   $('.result').append(`<div class="${data['status']}"><span class="fa fa-check-circle"></span>${data['message']}</div>`);
+                    console.log(response.cart_items[0].quantidade);
+                   $('.result').append(`<div class="${response.status}"><span class="fa fa-check-circle"></span>${response['message']}</div>`);
                    $('.result').show();
-                   $('#count').attr('value', data['count']);
-                   $('#total').attr('value', `${data['total']} €`);
-                   $('.prod-img').attr('src', data['imagem']);
-               }else if (data['status'] === 'info') {
-                   $('.result').append(`<div class="${data['status']}"><span class="fa fa-info-circle"></span>${data['message']}</div>`);	
+                   $('#count').attr('value', response.count);
+                   $('#total').attr('value', `${response.total} €`);
+                   let cartItem = '';
+                   if(response.cart_items[0].id ){
+                    $(`#${response.cart_items[0].id}`).remove();
+                    response.cart_items.forEach(item => {
+                      
+                      $('span').remove();
+                          cartItem += `<div class="in-cart-content" id="${item.id}" >
+                          <img src="${item.imagemproduto}" alt="${item.nomeproduto}" class="prod-img">
+                          <input class="prod-nome" type="text" value="${item.nomeproduto}" readonly>
+                          <div class="cart-quantity">
+                              <input type="button" value="-" class="minus">
+                              <input class="quantidade" type="text" value="${item.quantidade}" readonly>
+                              <input type="button" value="+" class="plus">
+                          </div>
+                          <input class="prod-preco" type="text" value="${item.preco}" readonly>
+                          <input type="button" data-id="${item.id}" value="X" class="remove">
+                          </div>
+                          `
+                          
+                          });
+                          $('.in-cart').prepend(cartItem);
+                    
+                    }    
+               }else if (response.status === 'info') {
+                   $('.result').append(`<div class="${response.status}"><span class="fa fa-info-circle"></span>${response['message']}</div>`);	
                    $('.result').show();
                    
-                }else if (data['status'] === 'warning') {
-                     $('.result').append(`<div class="${data['status']}"><span class="fa fa-exclamation-triangle"></span>${data['message']}</div>`);
+                }else if (response.status === 'warning') {
+                     $('.result').append(`<div class="${response.status}"><span class="fa fa-exclamation-triangle"></span>${response['message']}</div>`);
                      $('.result').show();
                     
                 } else { 
-                    $('.result').append(`<div class="${data['status']}"><span class="fa fa-times-circle"></span>${data['message']}</div>`);
+                    $('.result').append(`<div class="${response.status}"><span class="fa fa-times-circle"></span>${response['message']}</div>`);
                     $('.result').show();
                    
                 }
@@ -91,8 +113,8 @@ $(document).ready(function () {
 
                 setTimeout(function () {
                     $('.result').hide('');
-                    if(data['redirect']){
-                        window.location.href = data['redirect'];
+                    if(response.redirect){
+                        window.location.href = response.redirect;
                         
                     }
                 }, 3000);
