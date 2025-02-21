@@ -90,10 +90,7 @@
                                 'redirect' => '',
                                 'cart_items' => $cart_items,
                                 'count' => $count + 1,
-                                'total' => $total,
-                                
-                                
-                                
+                                'total' => $total
                             ];
                         
                         }else{
@@ -159,18 +156,11 @@
                             ];
                             
                         }
-                    }
-                
-            
-
-                    
+                    }      
             echo json_encode($message);
-
-       
         }
         
-    
-        }
+}
         
         
     

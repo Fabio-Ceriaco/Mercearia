@@ -53,12 +53,12 @@ $(document).ready(function () {
    
 
     //comprar produto
-
+    
     $('body').on('click', '.cart-btn', function (e) {
       e.preventDefault();
         const id = $(this).attr('data-id');
         const url = 'assets/js/cart.php';
-       
+        
         $.ajax({
             url: url,
             type: 'POST',
@@ -68,63 +68,90 @@ $(document).ready(function () {
               $('.result').text('');
                if (response.status ==='success') {
                     console.log(textStatus);
-                    console.log(response.cart_items[0].quantidade);
-                   $('.result').append(`<div class="${response.status}"><span class="fa fa-check-circle"></span>${response['message']}</div>`);
+                   $('.result').append(`<div class="${response.status}"><span class="fa fa-check-circle"></span>${response.message}</div>`);
                    $('.result').show();
                    $('#count').attr('value', response.count);
                    $('#total').attr('value', `${response.total} €`);
                    let cartItem = '';
-                   if(response.cart_items[0].id ){
-                    $(`#${response.cart_items[0].id}`).remove();
-                    response.cart_items.forEach(item => {
-                      
-                      $('span').remove();
-                          cartItem += `<div class="in-cart-content" id="${item.id}" >
-                          <img src="${item.imagemproduto}" alt="${item.nomeproduto}" class="prod-img">
-                          <input class="prod-nome" type="text" value="${item.nomeproduto}" readonly>
-                          <div class="cart-quantity">
-                              <input type="button" value="-" class="minus">
-                              <input class="quantidade" type="text" value="${item.quantidade}" readonly>
-                              <input type="button" value="+" class="plus">
-                          </div>
-                          <input class="prod-preco" type="text" value="${item.preco}" readonly>
-                          <input type="button" data-id="${item.id}" value="X" class="remove">
-                          </div>
-                          `
-                          
-                          });
-                          $('.in-cart').prepend(cartItem);
-                    
-                    }    
-               }else if (response.status === 'info') {
-                   $('.result').append(`<div class="${response.status}"><span class="fa fa-info-circle"></span>${response['message']}</div>`);	
-                   $('.result').show();
-                   
-                }else if (response.status === 'warning') {
-                     $('.result').append(`<div class="${response.status}"><span class="fa fa-exclamation-triangle"></span>${response['message']}</div>`);
-                     $('.result').show();
-                    
+                   let carrinho = JSON.parse(localStorage.getItem('cartItem')) || [];
+                    if(response.cart_items[0].id ){
+                      $('.empty').remove();
+                      $(`#${response.cart_items[0].id}`).remove();
+                      response.cart_items.forEach(item => {
+                        carrinho.push(item);
+                            cartItem += `<div class="in-cart-content" id="${item.id}" >
+                            <img src="${item.imagemproduto}" alt="${item.nomeproduto}" class="prod-img">
+                            <input class="prod-nome" type="text" value="${item.nomeproduto}" readonly>
+                            <div class="cart-quantity">
+                                <input type="button" value="-" data-id="${item.id}"class="minus">
+                                <input class="quantidade" type="text" value="${item.quantidade}" readonly>
+                                <input type="button" value="+" data-id="${item.id}"  class="plus">
+                            </div>
+                            <input class="prod-preco" type="text" value="${item.preco}" readonly>
+                            <input type="button" data-id="${item.id}" value="X" class="remove">
+                            </div>
+                            `;
+                        })
+                        $('.in-cart').prepend(cartItem);
+                        localStorage.setItem('cartItem', JSON.stringify(carrinho));
+                      };   
                 } else { 
-                    $('.result').append(`<div class="${response.status}"><span class="fa fa-times-circle"></span>${response['message']}</div>`);
+                    $('.result').append(`<div class="${response.status}"><span class="fa fa-times-circle"></span>${response.message}</div>`);
                     $('.result').show();
-                   
                 }
-                
-
                 setTimeout(function () {
                     $('.result').hide('');
                     if(response.redirect){
                         window.location.href = response.redirect;
-                        
                     }
-                }, 3000);
-            }
+                }, 2000);
+            },
         });
-        
   });
 
+  //atualizar quantidade de artigos no carrinho
+  $('body').on('click', '.plus', function (e) {
+    e.preventDefault();
+    const id = $(this).attr('data-id');
+    const url = 'assets/js/mais.php';
+    
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: {id:id},
+      dataType: 'JSON',
+      success: function (response, textStatus, jqXHR) {
+        $('.result').text('');
+        console.log(response);
+         if (response.status ==='success') {
+          console.log(textStatus);
+          $('.result').append(`<div class="${response.status}"><span class="fa fa-check-circle"></span>${response.message}</div>`);
+          $('.result').show();
+          $('#count').attr('value', response.count);
+          $('#total').attr('value', `${response.total} ���`);
+          $(`#${response.produto_id}.quantidade`).val(response.quantidade);
+        } else {
+          $('.result').append(`<div class="${response.status}"><span class="fa fa-times-circle"></span>${response.message}</div>`);
+          $('.result').show();
+  
+      }
+      setTimeout(function () {
+        $('.result').hide('');
+        if(response.redirect){
+            window.location.href = response.redirect;
+        }
+    }, 2000);
+  }
+  
+    
+}
+)
+});
 
 
+
+  
+  
 
   //remover artigos do carrinho
 
@@ -138,53 +165,83 @@ $(document).ready(function () {
           type: 'POST',
           data: {id:id},
           dataType: 'JSON',
-          success: function (data, textStatus, jqXHR) {
+          success: function (response, textStatus, jqXHR) {
               $('.result').text('');
-             if (data['status'] ==='success') {
+             if (response.status  ==='success') {
                   console.log(textStatus);
-                  console.log(data);
-                 $('.result').append(`<div class="${data['status']}"><span class="fa fa-check-circle"></span>${data['message']}</div>`);
+                 $('.result').append(`<div class="${response.status }"><span class="fa fa-check-circle"></span>${response.message}</div>`);
                  $('.result').show();
-                 $('#count').attr('value', data['count']);
-                 $('#total').attr('value', `${data['total']} €`);
-                 if(data['count'] <= 0){
-                  $('.cart-content').prepend('<span>Carrinho vazio</span>');
-                  $(`#${data['produto_id']}`).remove();
-                 
+                 $('#count').attr('value', response.count);
+                 $('#total').attr('value', `${response.total} €`);
+                 let carrinho = JSON.parse(localStorage.getItem('cartItem')) || [];
+                 if(response.count <= 0){
+                  $('label').remove();
+                  $('.checkout-btn').remove();
+                  $('.in-cart').prepend('<span class="empty">Carrinho vazio</span><label for="total" class="total" >Total: <input name="total" id="total" type="text" value="0.00 €" readonly></label><input class="checkout-btn" type="button" value="Checkout">');
+                  $(`#${response.produto_id}`).remove();
+                  carrinho = [];
                  }else{
-                  $(`#${data['produto_id']}`).remove();
+                  //remover item do localStorage carrinho
+                  carrinho = carrinho.filter(item => item.id!== response.produto_id);
+                  $(`#${response.produto_id}`).remove();
                  }
-                 
-             }else if (data['status'] === 'info') {
-                 $('.result').append(`<div class="${data['status']}"><span class="fa fa-info-circle"></span>${data['message']}</div>`);	
-                 $('.result').show();
-              }else if (data['status'] === 'warning') {
-                   $('.result').append(`<div class="${data['status']}"><span class="fa fa-exclamation-triangle"></span>${data['message']}</div>`);
-                   $('.result').show();
+                 localStorage.setItem('cartItem', JSON.stringify(carrinho));
               } else { 
-                  $('.result').append(`<div class="${data['status']}"><span class="fa fa-times-circle"></span>${data['message']}</div>`);
+                  $('.result').append(`<div class="${response.status}"><span class="fa fa-times-circle"></span>${response.message}</div>`);
                   $('.result').show();
               }
-          
-
               setTimeout(function () {
                   $('.result').hide('');
-                  if(data['redirect']){
-                      window.location.href = data['redirect'];
+                  if(response.redirect){
+                      window.location.href = response.redirect;
                   }
-              }, 3000);
+              }, 2000);
           }
       });
       
-})
-
-  $('.cart').on('click', function (e) { 
-    e.preventDefault();
-    $('#cart-content').load('assets/js/cartContent.php');
-  });
-
+});
 });
 
 
 
 
+$('body').ready(function () {
+  let cartItem = '';
+  const saveCarrinho = JSON.parse(localStorage.getItem('cartItem')) || [];
+  let total = 0;
+    if(saveCarrinho.length > 0){
+      $('#count').attr('value', saveCarrinho.length);
+      
+      for(let i = 0; i < saveCarrinho.length; i++){
+        const item = saveCarrinho[i];
+        total += item.quantidade * item.preco;
+      }
+      $('#total').attr( 'value', `${total.toFixed(2)} €`);
+      $('.empty').remove();
+      $('lebel').remove();
+      saveCarrinho.forEach(item => {
+         cartItem = `<div class="in-cart-content" id="${item.id}" >
+        <img src="${item.imagemproduto}" alt="${item.nomeproduto}" class="prod-img">
+        <input class="prod-nome" type="text" value="${item.nomeproduto}" readonly>
+        <div class="cart-quantity">
+        <input type="button" value="-" data-id="${item.id}" class="minus">
+        <input class="quantidade" type="text" value="${item.quantidade}" readonly>
+        <input type="button" value="+" data-id="${item.id}" class="plus">
+        </div>
+        <input class="prod-preco" type="text" value="${item.preco}" readonly>
+        <input type="button" data-id="${item.id}" value="X" class="remove">
+        </div>`;
+        $('.in-cart').prepend(cartItem);
+      })};
+      $('.cart-content').append(`<label for="total">Total: <input name="total" class="total" id="total" type="text" value="${total.toFixed(2)} €" readonly></span><input class="checkout-btn" type="button" value="Checkout">`);
+});
+$('.cart').on('click', function () { 
+  
+  if($('.cart-content').css('display') === 'none'){
+    $('.cart-content').css('display', 'flex');
+  }else{
+    $('.cart-content').css('display', 'none');
+  }
+
+
+});

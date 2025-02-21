@@ -32,7 +32,9 @@
             <a href="#" class="cart" id="cart"><i class="fa-solid fa-cart-shopping"></i><input id="count" type="text" value="0" readonly></a>
         </div>
         <div class="cart-content" id="cart-content">
-            <?php include './assets/js/cartContent.php'?>
+        <div class="in-cart">
+            <span class='empty'>Carrinho Vazio</span>
+        </div>
         </div>
         
 

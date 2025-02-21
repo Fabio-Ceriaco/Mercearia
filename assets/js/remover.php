@@ -40,7 +40,7 @@
         $produto = $produtos->fetch(PDO::FETCH_ASSOC);
 
 
-        //adicionar quantidade em carrinho a quantidaeade do produto no stock
+        //adicionar quantidade em carrinho a quantidade do produto no stock
         $newStock = $produto['stock'] + $produto_quantidade;
         
        
@@ -73,6 +73,7 @@
                 'total' => $total ? $total : '0.00',
                 'produto_id' => $value
             ];
+            echo json_encode($message);
         }else{
             $message = [
                 'message' => 'Não foi possível remover o produto',
@@ -80,7 +81,7 @@
                 'redirect' => ''
             ];
         }
-        echo json_encode($message);
+       
 
-        return;
+        
     };
