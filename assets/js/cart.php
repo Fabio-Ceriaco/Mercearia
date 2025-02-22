@@ -2,12 +2,12 @@
     session_start();
     include '../../includes/conexao.php';
 
-    $message = null;
-    $post = filter_input_array(INPUT_POST, FILTER_DEFAULT);
-    $postFilters = array_map('strip_tags', $post);
+    $message = null; //mensagem de retorno
+    $post = filter_input_array(INPUT_POST, FILTER_DEFAULT); ///filtrar inputs para evitar ataques de SQL Injection
+    $postFilters = array_map('strip_tags', $post);//remover tags HTML do input
 
 
-    foreach($postFilters as $key => $value){
+    foreach($postFilters as $key => $value){ //aplicar filtro para nome do produto
         $product = str_replace('-','', mb_strtolower($key)); 
 
         
@@ -74,7 +74,7 @@
                         $stock->bindParam(':id', $product_id, PDO::PARAM_INT);
                         $stock->execute();
                         
-                        if($create){
+                        if($create){ //se adicionado com sucesso
                             $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, quantidade, carrinho.preco,
                              produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
                             $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
@@ -109,7 +109,7 @@
                         $value = number_format($product_preco * $cart_quantidade, 2, ',', '');
                         $stockToUp = $product_stock - 1;
                         
-        
+                        //atualizar a quantidade e preço do item no carrinho
                         $updateStock = $conn->prepare('UPDATE carrinho SET quantidade = :quantidade, preco = :value WHERE id = :id AND produto_id = :produto_id');
                         $updateStock->bindParam(':quantidade', $cart_quantidade, PDO::PARAM_INT);
                         $updateStock->bindParam(':value', $value, PDO::PARAM_STR);
@@ -126,14 +126,15 @@
 
 
                         
-                        if($stockNew){
+                        if($stockNew){ //se stockNew foram actualizados com sucesso
+                            //obter itens do carrinho para mostrar na página
                             $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, carrinho.quantidade, carrinho.preco,
                              produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
                             $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
                             $query->execute();
                             $cart_items = $query->fetchAll(PDO::FETCH_ASSOC);
                             
-                            
+                            //obter o total do carrinho
                             $query = $conn->prepare('SELECT sum(preco) AS total FROM carrinho');
                             $query->execute();
                             $total = $query->fetch(PDO::FETCH_ASSOC)['total'];

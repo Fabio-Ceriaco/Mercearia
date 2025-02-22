@@ -49,6 +49,7 @@
         $delete->bindParam(':id', $value, PDO::PARAM_INT);
         $delete->execute();
 
+        //obter o novo total do carrinho
         $query = $conn->prepare('SELECT sum(preco) AS total FROM carrinho');
         $query->execute();
         $total = $query->fetch(PDO::FETCH_ASSOC)['total'  ];
@@ -62,9 +63,7 @@
             $updateStock->bindParam(':stock', $newStock, PDO::PARAM_STR);
             $updateStock->execute();
 
-            
-
-
+        
             $message = [
                 'message' => 'Produto removido com sucesso',
                 'status' =>'success',
