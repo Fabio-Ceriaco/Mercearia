@@ -6,7 +6,8 @@
 
 
 
-
+<html>
+<body>
     <!--Barra de navegação-->
     <nav  >
         <!--Logo-->
@@ -22,7 +23,7 @@
         <ul class="navBar" id="navBar">
             <li><a href="home" class="active">Home</a></li>
             <li><a href="produtos">Produtos</a></li>
-            <li><a href="#">Folhetos</a></li>
+            <li><a href="../pages/registos/registosForm.php">Folhetos</a></li>
             <li><a href="#">Area Cliente</a></li>
             <li><a href="#">Administração</a></li>
         </ul>
@@ -42,3 +43,22 @@
             <input type="submit" value="Log/Sign in" class="log-btn" >
         </div>
     </nav>
+    <section class="login-section">
+        <div class="login" id="login">
+        <i class="fas fa-times" id="close"></i>
+        <br>
+        <h2>Login</h2>
+        <br>
+        <form method="post" action="login.php">
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br>
+            <input type="submit" value="Entrar">
+        </form>
+        <p>Ainda não possui uma conta? <span class="registar" id="registar"><a href="registosForm" >Crie uma agora</a></span></p>
+        </div>
+    </section>
+    
+</body>
+</html>
