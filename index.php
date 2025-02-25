@@ -1,11 +1,12 @@
 <?php 
+    ini_set('default_charset', 'UTF-8');
     include 'includes/conexao.php';
     if(!isset($_SESSION)){
         session_start();
     }
 
     try{
-        $query = "SELECT * FROM users_comments JOIN users ON users_comments.user_id = users.id";
+        $query = "SELECT * FROM user_comments JOIN users ON users_comments.user_id = users.id";
         $stmt = $conn -> prepare($query);
         $stmt -> execute();
         $comments = $stmt -> fetchAll(PDO::FETCH_ASSOC);
@@ -111,5 +112,6 @@
     <!--script-->
     <script type="text/javascript" src="./assets/js/script.js"></script>
     <script type="text/javascript" src="./pages/cart/cart.js"></script>
+    <script type="text/javascript" src="./pages/registos/userRegistos.js"></script>
   </body>
 </html>

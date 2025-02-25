@@ -1,7 +1,7 @@
 
 <section class="registo-section">
     <h2>Registar como cliente</h2>
-    <form method="post" action="./pages/registos/registos.php" enctype="multipart/form-data">
+    <form method="post" action="./pages/registos/registos.php" enctype="multipart/form-data" class="registo-form">
         <div class="grupo-registo">
         <input type="text" id="nome" name="nome">
         <label for="nome" >Nome:</label>
