@@ -6,7 +6,7 @@
     }
 
     try{
-        $query = "SELECT * FROM user_comments JOIN users ON users_comments.user_id = users.id";
+        $query = "SELECT * FROM user_comments JOIN users ON user_comments.user_id = users.id";
         $stmt = $conn -> prepare($query);
         $stmt -> execute();
         $comments = $stmt -> fetchAll(PDO::FETCH_ASSOC);
