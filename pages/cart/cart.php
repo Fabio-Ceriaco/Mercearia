@@ -1,4 +1,8 @@
 <?php 
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
     session_start();
     include '../../includes/conexao.php';
 
@@ -12,9 +16,9 @@
 
         
         
-        if(!isset($_SESSION) || empty($_SESSION)){   //sessão do utilizador
+        /*if(!isset($_SESSION) || empty($_SESSION)){   //sessão do utilizador
             $_SESSION = rand(1, 1000);
-        }
+        }*/
 
         $products = $conn->prepare('SELECT * FROM produtos WHERE id = :id');
         $products->bindParam(':id', $value, PDO::PARAM_INT);
@@ -60,8 +64,8 @@
                         
                        //produto não existe no carrinho, adicionar
                         $nova_quantidade = 1;
-                        $novo_valor = number_format($product_preco * $nova_quantidade, 2, ',', '');
-                        $create = $conn->prepare('INSERT INTO carrinho ( produto_id, quantidade, preco) VALUES ( :produto_id, :quantidade, :preco)');
+                        $novo_valor = $product_preco * $nova_quantidade;
+                        $create = $conn->prepare('INSERT INTO carrinho (produto_id, quantidade, preco) VALUES ( :produto_id, :quantidade, :preco)');
                         $create->bindParam(':produto_id', $product_id, PDO::PARAM_INT);
                         $create->bindParam(':quantidade', $nova_quantidade, PDO::PARAM_INT);
                         $create->bindParam(':preco',$novo_valor , PDO::PARAM_STR);
@@ -106,7 +110,7 @@
                         //produto existe no carrinho, incrementar a quantidade
                         $cart = $carts->fetch(PDO::FETCH_ASSOC);
                         $cart_quantidade = strip_tags($cart['quantidade'] + 1);
-                        $value = number_format($product_preco * $cart_quantidade, 2, ',', '');
+                        $value = $product_preco * $cart_quantidade;
                         $stockToUp = $product_stock - 1;
                         
                         //atualizar a quantidade e preço do item no carrinho

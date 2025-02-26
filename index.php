@@ -58,7 +58,7 @@
                 <!--profile-->
                 <div class="client-profile">
                     <!--Img-->
-                    <img src="./assets/img/client-1.jpg" alt="client">
+                    <img src="<?=$comment['imagem_path']?>" alt="client">
                     <!--text-->
                     <div class="profile-text">
                         <strong><?=$comment['nome']?></strong>
@@ -76,7 +76,7 @@
                 </div>
 
                 <!--comments-->
-                <p><?=$comment['comment_id']?></p>
+                <p><?=$comment['comentario']?></p>
             </div>
             <?php 
                 endforeach; 
@@ -113,5 +113,6 @@
     <script type="text/javascript" src="./assets/js/script.js"></script>
     <script type="text/javascript" src="./pages/cart/cart.js"></script>
     <script type="text/javascript" src="./pages/registos/userRegistos.js"></script>
+    <script type="text/javascript" src="./pages/logs/logs.js"></script>
   </body>
 </html>
