@@ -1,9 +1,10 @@
 <?php 
-    ini_set('default_charset', 'UTF-8');
     include 'includes/conexao.php';
     if(!isset($_SESSION)){
         session_start();
     }
+    
+    
 
     try{
         $query = "SELECT * FROM user_comments JOIN users ON user_comments.user_id = users.id";
@@ -25,7 +26,7 @@
     <title>Mercearia</title>
     <script src="https://kit.fontawesome.com/f98569bb37.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="./assets/style/style.css">
+    <link rel="stylesheet" href="./assets/style/styles.css">
    
   </head>
   <body>
@@ -110,7 +111,7 @@
      ?>
     
     <!--script-->
-    <script type="text/javascript" src="./assets/js/script.js"></script>
+    <script type="text/javascript" src="./assets/js/scripts.js"></script>
     <script type="text/javascript" src="./pages/cart/cart.js"></script>
     <script type="text/javascript" src="./pages/registos/userRegistos.js"></script>
     <script type="text/javascript" src="./pages/logs/logs.js"></script>

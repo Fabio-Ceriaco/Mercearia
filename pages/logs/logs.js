@@ -26,13 +26,12 @@ $(document).ready(function () {
           );
           $(".result").show();
         }
-        setTimeout(() => {
-          $(".result").hide();
-        }, 500);
+
         if ($(".login-section").css("display") === "flex") {
           $(".login-section").css("display", "none");
         }
         setTimeout(() => {
+          $(".result").hide();
           window.location.reload();
         }, 500);
       },
