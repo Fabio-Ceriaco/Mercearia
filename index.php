@@ -1,10 +1,5 @@
 <?php 
     include 'includes/conexao.php';
-    if(!isset($_SESSION)){
-        session_start();
-    }
-    
-    
 
     try{
         $query = "SELECT * FROM user_comments JOIN users ON user_comments.user_id = users.id";

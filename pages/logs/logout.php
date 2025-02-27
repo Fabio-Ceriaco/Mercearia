@@ -1,9 +1,11 @@
 <?php
 include '../../includes/conexao.php';
 
-if(!isset($_SESSION)){
-    session_start();
-}
+
+session_start();
+
+unset($_SESSION['csrf_token']);
+unset($_SESSION['csrf_token_time']);
 session_unset();
 session_destroy();
 header('Location: ../../index.php');

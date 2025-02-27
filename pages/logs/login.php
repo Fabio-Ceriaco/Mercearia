@@ -1,6 +1,6 @@
 <?php
-    /*ini_set('display_errors', 1);
-    error_reporting(E_ALL);*/
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
 
     include '../../includes/conexao.php'; //ligar ao banco de dados
     $mensagem = null; //mensagem de retorno
@@ -8,14 +8,38 @@
     $postFilters = array_map('strip_tags', $post); //remover tags HTML do input
 
     
-    if(!isset($_SESSION)){ //iniciar sessão se não existir
+   
         session_start();
-    }
+  
+    
+    
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') { //verificar se o método da requisição é POST
-
-        $email = htmlspecialchars($_POST['email']); //sanitizar os dados do email
-        $password = htmlspecialchars($_POST['password']); //sanitizar os dados da password
+       
+        $max_time = 60 * 60 * 24; 
+        if(!hash_equals($_POST['token'], $postFilters['token'])) { //verificar se o token de segurança é válido
+            $mensagem = [
+                'message' => 'Token inválido!',
+                'status' => 'error',
+                'redirect' => ''
+            ];
+            echo json_encode($mensagem);
+            exit();
+        }elseif(time() - $_SESSION['csrf_token_time'] > $max_time) { //verificar se o token de segurança expirou
+            unset($_SESSION['csrf_token']);
+            unset($_SESSION['csrf_token_time']);
+            
+            $mensagem = [
+                'message' => 'Token expirado!',
+                'status' => 'error',
+                'redirect' => ''
+            ];
+            echo json_encode($mensagem);
+            
+        }else{
+               //sanitizar os dados do username, email e password
+        $email = htmlspecialchars($_POST['email']); 
+        $password = htmlspecialchars($_POST['password']); 
         
         try {   
 
@@ -65,5 +89,10 @@
     } catch(PDOException $e) {
         die('Não foi possível realizar a consulta a base de dados: ' . htmlspecialchars($e->getMessage()));
     }
+        }
+        
+        
+
+     
     $conn = null;
     }

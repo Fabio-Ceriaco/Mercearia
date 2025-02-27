@@ -1,7 +1,12 @@
 <?php
     include 'conexao.php';
+    
     if(!isset($_SESSION)){
         session_start();
+    }
+    if(empty($_SESSION['crsf_token'])){
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        $_SESSION['csrf_token_time'] = time();
     }
 
     if(isset($_SESSION['id']) && isset($_SESSION['username']) && isset($_SESSION['email']) && isset($_SESSION['tipo'])){
@@ -98,6 +103,7 @@
         <h2>Login</h2>
         <br>
         <form method="post" action="">
+            <input type="hidden" name="csrf_toke" id="csrf_token"value="<?=$_SESSION['csrf_token']?>">
             <label for="email">Email:</label><br>
             <input type="email" id="email" name="email" required><br>
             <label for="password">Password:</label><br>

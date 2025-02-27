@@ -3,9 +3,11 @@ $(document).ready(function () {
     e.preventDefault();
     let email = $("#email").val();
     let password = $("#password").val();
+    let token = $("#csrf_token").val();
     let formLogin = {
       email: email,
       password: password,
+      token: token,
     };
     let url = "pages/logs/login.php";
     $.ajax({
@@ -20,6 +22,10 @@ $(document).ready(function () {
             `<div class="${response.status}"><span class="fa fa-check-circle"></span>${response.message}</div>`
           );
           $(".result").show();
+          setTimeout(() => {
+            $(".result").hide();
+            window.location.href = "./index.php";
+          }, 500);
         } else {
           $(".result").append(
             `<div class="${response.status}"><span class="fa fa-times-circle"></span>${response.message}</div>`
@@ -32,7 +38,6 @@ $(document).ready(function () {
         }
         setTimeout(() => {
           $(".result").hide();
-          window.location.reload();
         }, 500);
       },
     });
