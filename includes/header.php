@@ -1,13 +1,13 @@
 <?php
     include 'conexao.php';
     
-    if(!isset($_SESSION)){
-        session_start();
-    }
+    
     if(empty($_SESSION['crsf_token'])){
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         $_SESSION['csrf_token_time'] = time();
-    }
+    };
+   
+   
 
     if(isset($_SESSION['id']) && isset($_SESSION['username']) && isset($_SESSION['email']) && isset($_SESSION['tipo'])){
         $is_logged = $_SESSION['id'];
@@ -110,7 +110,7 @@
             <input type="password" id="password" name="password" required><br>
             <input type="submit" id="submitlogin" value="Entrar">
         </form>
-        <p>Ainda não possui uma conta? <span class="registar" id="registar"><a href="registosForm" >Crie uma agora</a></span></p>
+        <p>Ainda não possui uma conta? <span class="registar" id="registar"><a href="" >Crie uma agora</a></span></p>
         </div>
     </section>
     

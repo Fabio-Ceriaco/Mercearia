@@ -58,11 +58,10 @@ $(document).ready(function () {
   //evento para o botão de criar conta
   $(".registar a").click(function (e) {
     e.preventDefault();
-    let page = $(this).attr("href");
-    console.log(page);
+
     $(".login-section").css("display", "none");
     $("#clients").css("display", "none");
-    $("#content").load(page + ".php", function (status) {
+    $("#content").load("./pages/registos/registosForm.php", function (status) {
       if (status === "error") {
         console.log("Erro ao carregar o conteúdo solicitado.");
       } else {

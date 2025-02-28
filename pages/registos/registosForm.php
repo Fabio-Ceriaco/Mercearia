@@ -1,9 +1,9 @@
 
 <section class="registo-section">
     <h2>Registar como cliente</h2>
-    <form method="post" action="./pages/registos/registos.php" enctype="multipart/form-data" class="registo-form">
+    <form method="post" enctype="multipart/form-data" id="registoForm">
         <div class="grupo-registo">
-        <input type="text" id="nome" name="nome">
+        <input type="text" id="nome" name="nome" >
         <label for="nome" >Nome:</label>
         </div>
         
@@ -24,7 +24,7 @@
 
         <div class="grupo-registo">
         <input type="password" id="cpassword" name="cpassword" >
-        <label for="cpassword" >Password:</label>
+        <label for="cpassword" >Confirmar Password:</label>
         </div>
 
         <div class="grupo-registo">
@@ -38,7 +38,7 @@
         </div>
 
         <div class="grupo-registo">
-        <input type="date" id="data_nascimento" name="data_nascimento" >
+        <input type="text" id="data_nascimento" name="data_nascimento"  >
         <label for="data_nascimento" >Data de Nascimento:</label>
         </div>
 
@@ -48,12 +48,12 @@
         </div>
 
         <div class="grupo-registo">
-        <input type="file" id="upload-img" name="img-registo" >
+        <input type="file" id="upload-img" name="imagem" >
         <label for="upload-img" id="img-registo">Imagem do Perfil:</label>
         </div>
         
         
-        <label for="terms" class="terms-label"><input type="checkbox" id="terms" name="terms"> Aceitar os Termos e Condições</label><br><br>
-        <input type="submit" value="Registar" class="registo-btn">
+        <label for="terms" class="terms-label"><input type="checkbox" id="terms" name="terms" > Aceitar os Termos e Condições</label><br><br>
+        <input type="submit" value="Registar" id="submit-btn">
     </form>
 </section>

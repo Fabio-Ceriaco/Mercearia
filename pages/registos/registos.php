@@ -1,9 +1,13 @@
 <?php
     
     include '../../includes/conexao.php';
+    /*ini_set('display_errors', 1);
+    error_reporting(E_ALL);*/
     
-    $erro = [];
     $resposta = [];
+    $data_atual =intval(date('Y-m-d'));
+    
+   
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -18,29 +22,62 @@
             $morada = htmlspecialchars($_POST['morada']);
             $data_nascimento = htmlspecialchars($_POST['data_nascimento']);
             $nif = htmlspecialchars($_POST['nif']);
+            $data_n_format = date_create($data_nascimento);
+            $data_n_format = intval(date_format($data_n_format, 'Y-m-d'));
+            $imagem = $_FILES['imagem'];
+            
+            
 
             if(empty($nome) || empty($username) || empty($email) || empty($password) || empty($telefone) || empty($morada) || empty($data_nascimento) || empty($nif)){
-
-                $erro['campos'] = 'Por favor preencha todos os campos!';
+                $resposta = [
+                    'status' => 'error',
+                    'mensagem' => 'Por favor preencha todos os campos!'
+                ];
+                echo json_encode($resposta);
+                
+            }
+            if(($data_atual - $data_n_format) < 18){
+                
+                $resposta = [
+                    'status' => 'error',
+                    'mensagem' => 'Deve ter mais de 18 anos!'
+                ];
+                echo json_encode($resposta);
             }
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
 
-                $erro['email'] = 'O endereço de email introduzido não é válido!';
+               $resposta = [
+                    'status' => 'error',
+                    'mensagem' => 'O email introduzido não é válido!'
+                ];
+                echo json_encode($resposta);
             }
             if(strlen($telefone) < 9 || !is_numeric($telefone)){
 
-                $erro['telefone'] = 'O número de telefone introduzido não é válido!';
+                $resposta = [
+                    'status' => 'error',
+                    'mensagem' => 'O telefone introduzido não é válido!'
+                ];
+                echo json_encode($resposta);
             }
             if(strlen($password) < 8 || strlen($password) > 20){
 
-                $erro['password'] = 'A password deve ter entre 8 e 20 caracteres!';
+                $resposta = [
+                    'status' => 'error',
+                    'mensagem' => 'A password precisa ter entre 8 e 20 caracteres!'
+                ];
+                echo json_encode($resposta);
             }
             if($password !== $cpassword){
 
-                $erro['passwords'] = 'As passwords não coincidem!';
+                $resposta = [
+                    'status' => 'error',
+                    'mensagem' => 'As passwords não coincidem!'
+                ];
+                echo json_encode($resposta);
             }
 
-            if(count($erro) == 0){
+            if($resposta == null){
 
                 $verificar = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
                 $verificar->bindParam(':username', $username, PDO::PARAM_STR);
@@ -49,19 +86,26 @@
 
                 if($verificar->rowCount() > 0){
 
-                    $erro['existe'] = "O username ou o endereço de email introduzido já existe!";
+                    $resposta = [
+                        'status' => 'error',
+                        'mensagem' => 'Este username ou email já existem!'
+                    ];
+                    echo json_encode($resposta);
 
                 } else {
 
                     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-                    if(isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0){
+                    if(isset($_FILES['imagem']) && $_FILES['imagem']['size'] > 0){
+                        $imagem = $_FILES['imagem'];
+                        
+                        if($imagem['size'] > 5000000){
 
-                        $imagem = $_FILES['img-registo'];
-
-                        if($image['size'] > 5000000){
-
-                            $erro['size'] = 'A imagem excedeu o limite de 5MB!';
+                            $resposta = [
+                                'status' => 'error',
+                                'mensagem' => 'A imagem não pode ser carregada. Tente de novo!'
+                            ];
+                            echo json_encode($resposta);
                         }
 
                         $pasta = "../../assets/imagens_prefil/";
@@ -71,12 +115,17 @@
                         
                         if($extensao!= 'jpg' && $extensao!= 'jpeg' && $extensao!= 'png'){
 
-                            $erro['formato'] = 'Formato de imagem inválido! Apenas são permitidos ficheiros.jpg,.jpeg e.png!';
+                            $resposta = [
+                                'status' => 'error',
+                                'mensagem' => 'A imagem precisa ser em formato JPG, JPEG ou PNG!'
+                            ];
+                            echo json_encode($resposta);
                         }
 
                         $path = $pasta. $novoNomeImagem. '.'. $extensao;
+                        $open_path = './assets/imagens_prefil/'. $novoNomeImagem. '.'. $extensao;
                         $certo = move_uploaded_file($imagem['tmp_name'], $path);
-
+                        
                         if($certo){
                             try {
                                 $inserir = $conn->prepare("INSERT INTO users (nome, username, email, password, telefone, morada, data_nascimento, nif, nome_imagem, imagem_path) VALUES (:nome, :username, :email, :password, :telefone, :morada, :data_nascimento, :nif, :nome_imagem, :imagem_path)");
@@ -89,14 +138,22 @@
                                 $inserir->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
                                 $inserir->bindParam(':nif', $nif, PDO::PARAM_STR);
                                 $inserir->bindParam(':nome_imagem', $nomeImagem, PDO::PARAM_STR);
-                                $inserir->bindParam(':imagem_path', $path, PDO::PARAM_STR);
+                                $inserir->bindParam(':imagem_path', $open_path, PDO::PARAM_STR);
                                 $inserir->execute();
 
-                                $resposta['sucesso'] = 'Utilizador registado com sucesso!';
+                                $reposta = [
+                                     'status' =>'sucesso',
+                                     'mensagem' => 'Utilizador registado com sucesso!'
+                                ];
+                                echo json_encode($resposta);
 
                             } catch(PDOException $e) {
 
-                                $erro['bd'] = 'Erro ao registar utilizador! Devido :'. strip_tags($e->getMessage());
+                                $resposta = [
+                                     'status' => 'error',
+                                     'mensagem' => 'Erro ao registar utilizador! Devido: '. strip_tags($e->getMessage())
+                                ];
+                                echo json_encode($resposta);
 
                             }
                         }
@@ -115,34 +172,51 @@
                                 $inserir->bindParam(':nif', $nif, PDO::PARAM_STR);
                                 $inserir->execute();
 
-                                $resposta['sucesso'] = 'Utilizador registado com sucesso!';
+                                $resposta = [
+                                     'status' =>'sucesso',
+                                     'mensagem' => 'Utilizador registado com sucesso!'
+                                ];
+                                echo json_encode($resposta);
 
                             } catch(PDOException $e) {
 
-                                $erro['bd'] = 'Erro ao registar utilizador! Devido :'. strip_tags($e->getMessage());
+                                $resposta = [
+                                     'status' => 'error',
+                                     'mensagem' => 'Erro ao registar utilizador! Devido: '. strip_tags($e->getMessage())
+                                ];
+                                echo json_encode($resposta);
                             }
                     }
                 };
 
             }else {
 
-                $resposta['erro'] = $erro;
-                exit(json_encode($resposta));
-                exit();
+                $resposta = [
+                    'status' => 'error',
+                   'mensagem' => 'Erro ao validar os dados!'
+                ];
+                echo json_encode($resposta);
+                
             }
             
            
 
         } catch(PDOException $e) {
 
-            $erro['bd'] = 'Erro ao registar utilizador! Devido :'. strip_tags($e->getMessage());
+            $resposta = [
+                'status' => 'error',
+                'mensagem' => 'Erro ao conectar ao banco de dados! Devido: '. strip_tags($e->getMessage())
+            ];
+            echo json_encode($resposta);
 
         }
         
-        $resposta['erro'] = $erro;
-        echo json_encode($resposta); 
-        exit();
+        
+        
+        
+        
         
     }
 
-    $conn = null;
+    
+?>

@@ -9,4 +9,5 @@ unset($_SESSION['csrf_token_time']);
 session_unset();
 session_destroy();
 header('Location: ../../index.php');
+$conn = null;
 exit();

@@ -1,6 +1,6 @@
 <?php 
     include 'includes/conexao.php';
-
+   
     try{
         $query = "SELECT * FROM user_comments JOIN users ON user_comments.user_id = users.id";
         $stmt = $conn -> prepare($query);
@@ -108,7 +108,7 @@
     <!--script-->
     <script type="text/javascript" src="./assets/js/scripts.js"></script>
     <script type="text/javascript" src="./pages/cart/cart.js"></script>
-    <script type="text/javascript" src="./pages/registos/userRegistos.js"></script>
-    <script type="text/javascript" src="./pages/logs/logs.js"></script>
+    <script type="text/javascript" src="./pages/registos/registo.js"></script>
+    <script type="text/javascript" src="./pages/logs/logss.js"></script>
   </body>
 </html>

@@ -1,19 +1,12 @@
 <?php
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
-
+    session_start();
     include '../../includes/conexao.php'; //ligar ao banco de dados
     $mensagem = null; //mensagem de retorno
     $post = filter_input_array(INPUT_POST, FILTER_DEFAULT); //filtrar inputs para evitar ataques de SQL Injection
     $postFilters = array_map('strip_tags', $post); //remover tags HTML do input
-
-    
-   
-        session_start();
-  
-    
-    
-
+ 
     if($_SERVER['REQUEST_METHOD'] == 'POST') { //verificar se o método da requisição é POST
        
         $max_time = 60 * 60 * 24; 
