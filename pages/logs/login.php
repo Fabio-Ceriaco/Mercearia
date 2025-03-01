@@ -1,7 +1,9 @@
 <?php
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
-    session_start();
+    if(!isset($_SESSION)){
+        session_start();
+    }
     include '../../includes/conexao.php'; //ligar ao banco de dados
     $mensagem = null; //mensagem de retorno
     $post = filter_input_array(INPUT_POST, FILTER_DEFAULT); //filtrar inputs para evitar ataques de SQL Injection

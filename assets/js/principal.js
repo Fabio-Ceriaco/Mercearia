@@ -79,4 +79,35 @@ $(document).ready(function () {
       $(".area-cliente").css("display", "none");
     }
   });
+
+  // evento para os links da area cliente
+
+  $(".area-cliente a").click(function (e) {
+    e.preventDefault();
+    let page = $(this).attr("href");
+
+    $("#content").load(page + ".php", function (status) {
+      if (status === "error") {
+        console.log("Erro ao carregar o conteúdo solicitado.");
+      } else {
+        console.log("Página carregada com sucesso.");
+        $(".area-cliente").css("display", "none");
+      }
+    });
+  });
+
+  // evento retirar readonly do input
+
+  $("body").on("click", "#editar", function (e) {
+    e.preventDefault();
+    if ($("#guardar").css("display") === "none") {
+      $("#guardar").css("display", "flex");
+      $("#editar").css("display", "none");
+    } else {
+      $("#guardar").css("display", "none");
+      $("#editar").css("display", "flex");
+    }
+    $("#dadosForm input").prop("readonly", false); // Enable the input field
+    $("input[type='file']").prop("disabled", false); // Enable the submit button
+  });
 });

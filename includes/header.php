@@ -1,12 +1,13 @@
 <?php
     include 'conexao.php';
-    
-    
+    /*ini_set('display_errors', 1);
+    error_reporting(E_ALL);*/
+    session_start();
     if(empty($_SESSION['crsf_token'])){
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         $_SESSION['csrf_token_time'] = time();
     };
-   
+ 
    
 
     if(isset($_SESSION['id']) && isset($_SESSION['username']) && isset($_SESSION['email']) && isset($_SESSION['tipo'])){
@@ -64,10 +65,10 @@
             </div>
             <div class="area-cliente">
                 <h2>Area Cliente</h2>
-                <a href="dadosCliente" class="cliente-info">Dados Pessoais</a>
+                <a href="./pages/areaCliente/dadosPessoais" class="cliente-info">Dados Pessoais</a>
                 <a href="encomendas" class="cliente-info">Encomendas</a>
                 <a href="favoritos" class="cliente-info">Favoritos</a>
-                <a href="./pages/logs/logout.php" class="cliente-info"  id="logoutBtn">Logout</a>
+                <a href="./pages/logs/logout" class="cliente-info"  id="logoutBtn">Logout</a>
             </div>
         <?php elseif($is_logged && $tipo == 'admin'):?>
             <div class="user-info" id="user-info">
