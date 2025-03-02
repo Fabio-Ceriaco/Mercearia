@@ -63,7 +63,10 @@
             
             
             
-            if(count($erros) == 0 && empty($password)){
+            
+            if(count($erros) == 0 && empty($password) && empty($cpassword)){
+
+               
 
                 $verificar = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
                 $verificar->bindParam(':username', $username, PDO::PARAM_STR);
@@ -143,9 +146,10 @@
                                 $erros['imagem'] = 'Erro ao carregar a imagem! Devido: '. strip_tags($e->getMessage());
                             }
                     }
+                    
                 };
 
-            }else if(!empty($password) && count($erros) == 0){
+            }else if(!empty($password) || !empty($cpassword) ){
 
                 if(strlen($password) < 8 || strlen($password) > 20){
 
@@ -155,85 +159,90 @@
      
                      $erros['cpassword'] = 'As passwords não coincidem!';
                  }
+                 if(count($erros) == 0){ 
+                    $verificar = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
+                    $verificar->bindParam(':username', $username, PDO::PARAM_STR);
+                    $verificar->bindParam(':email', $email, PDO::PARAM_STR);
+                    $verificar->execute();
 
-                $verificar = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
-                $verificar->bindParam(':username', $username, PDO::PARAM_STR);
-                $verificar->bindParam(':email', $email, PDO::PARAM_STR);
-                $verificar->execute();
+                    if($verificar->rowCount() > 1){
 
-                if($verificar->rowCount() > 1){
+                        $erros['username_email'] = 'O username ou email já existem!';
 
-                    $erros['username_email'] = 'O username ou email já existem!';
+                    } else {
 
-                } else {
+                        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                        if(isset($_FILES['imagem']) && $_FILES['imagem']['size'] > 0){
+                            $imagem = $_FILES['imagem'];
+                            
+                            if($imagem['size'] > 5000000){
 
-                    if(isset($_FILES['imagem']) && $_FILES['imagem']['size'] > 0){
-                        $imagem = $_FILES['imagem'];
-                        
-                        if($imagem['size'] > 5000000){
-
-                            $erros['size'] = 'A imagem é muito grande!';
-                        }
-
-                        $pasta = "../../assets/imagens_prefil/";
-                        $nomeImagem = $imagem['name'];
-                        $novoNomeImagem = uniqid();
-                        $extensao = strtolower(pathinfo($nomeImagem, PATHINFO_EXTENSION));
-                        
-                        if($extensao!= 'jpg' && $extensao!= 'jpeg' && $extensao!= 'png'){
-
-                            $erros['extencao'] = 'A imagem não é válida! Apenas JPG, JPEG e PNG são permitidos!';
-                        }
-
-                        $path = $pasta. $novoNomeImagem. '.'. $extensao;
-                        $open_path = './assets/imagens_prefil/'. $novoNomeImagem. '.'. $extensao;
-                        $certo = move_uploaded_file($imagem['tmp_name'], $path);
-                        
-                        if($certo){
-                            try {
-                                $update = $conn->prepare("UPDATE users SET nome = :nome, username = :username, email = :email, telefone = :telefone, morada = :morada, data_nascimento = :data_nascimento, nif = :nif, nome_imagem = :nome_imagem, imagem_path = :imagem_path WHERE email = :email");
-                                $update->bindParam(':nome', $nome, PDO::PARAM_STR);
-                                $update->bindParam(':username', $username, PDO::PARAM_STR);
-                                $update->bindParam(':email', $email, PDO::PARAM_STR);
-                                $update->bindParam(':telefone', $telefone, PDO::PARAM_STR);
-                                $update->bindParam(':morada', $morada, PDO::PARAM_STR);
-                                $update->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
-                                $update->bindParam(':nif', $nif, PDO::PARAM_STR);
-                                $update->bindParam(':nome_imagem', $nomeImagem, PDO::PARAM_STR);
-                                $update->bindParam(':imagem_path', $open_path, PDO::PARAM_STR);
-                                $update->execute();
-
-                                $resposta['sucesso'] = 'Utilizador atualizado com sucesso!';
-
-                            } catch(PDOException $e) {
-
-                                $erros['imagem'] = 'Erro ao carregar a imagem! Devido: '. strip_tags($e->getMessage());
-
+                                $erros['size'] = 'A imagem é muito grande!';
                             }
-                        }
-                    }else{
 
-                            try {
+                            $pasta = "../../assets/imagens_prefil/";
+                            $nomeImagem = $imagem['name'];
+                            $novoNomeImagem = uniqid();
+                            $extensao = strtolower(pathinfo($nomeImagem, PATHINFO_EXTENSION));
+                            
+                            if($extensao!= 'jpg' && $extensao!= 'jpeg' && $extensao!= 'png'){
 
-                                $update = $conn->prepare("UPDATE users SET nome = :nome, username = :username, email = :email, telefone = :telefone, morada = :morada, data_nascimento = :data_nascimento, nif = :nif WHERE email = :email");
-                                $update->bindParam(':nome', $nome, PDO::PARAM_STR);
-                                $update->bindParam(':username', $username, PDO::PARAM_STR);
-                                $update->bindParam(':email', $email, PDO::PARAM_STR);
-                                $update->bindParam(':telefone', $telefone, PDO::PARAM_STR);
-                                $update->bindParam(':morada', $morada, PDO::PARAM_STR);
-                                $update->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
-                                $update->bindParam(':nif', $nif, PDO::PARAM_STR);
-                                $update->execute();
-
-                                $resposta['sucesso'] = 'Utilizador registado com sucesso!';
-
-                            } catch(PDOException $e) {
-
-                                $erros['imagem'] = 'Erro ao carregar a imagem! Devido: '. strip_tags($e->getMessage());
+                                $erros['extencao'] = 'A imagem não é válida! Apenas JPG, JPEG e PNG são permitidos!';
                             }
+
+                            $path = $pasta. $novoNomeImagem. '.'. $extensao;
+                            $open_path = './assets/imagens_prefil/'. $novoNomeImagem. '.'. $extensao;
+                            $certo = move_uploaded_file($imagem['tmp_name'], $path);
+                            
+                            if($certo){
+                                try {
+                                    $update = $conn->prepare("UPDATE users SET nome = :nome, username = :username, email = :email, password = :password, telefone = :telefone, morada = :morada, data_nascimento = :data_nascimento, nif = :nif, nome_imagem = :nome_imagem, imagem_path = :imagem_path WHERE email = :email");
+                                    $update->bindParam(':nome', $nome, PDO::PARAM_STR);
+                                    $update->bindParam(':username', $username, PDO::PARAM_STR);
+                                    $update->bindParam(':email', $email, PDO::PARAM_STR);
+                                    $update->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+                                    $update->bindParam(':telefone', $telefone, PDO::PARAM_STR);
+                                    $update->bindParam(':morada', $morada, PDO::PARAM_STR);
+                                    $update->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
+                                    $update->bindParam(':nif', $nif, PDO::PARAM_STR);
+                                    $update->bindParam(':nome_imagem', $nomeImagem, PDO::PARAM_STR);
+                                    $update->bindParam(':imagem_path', $open_path, PDO::PARAM_STR);
+                                    $update->execute();
+
+                                    $resposta['sucesso'] = 'Utilizador atualizado com sucesso!';
+
+                                } catch(PDOException $e) {
+
+                                    $erros['imagem'] = 'Erro ao carregar a imagem! Devido: '. strip_tags($e->getMessage());
+
+                                }
+                            }
+                        }else{
+
+                                try {
+
+                                    $update = $conn->prepare("UPDATE users SET nome = :nome, username = :username, email = :email, password = :password, telefone = :telefone, morada = :morada, data_nascimento = :data_nascimento, nif = :nif WHERE email = :email");
+                                    $update->bindParam(':nome', $nome, PDO::PARAM_STR);
+                                    $update->bindParam(':username', $username, PDO::PARAM_STR);
+                                    $update->bindParam(':email', $email, PDO::PARAM_STR);
+                                    $update->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+                                    $update->bindParam(':telefone', $telefone, PDO::PARAM_STR);
+                                    $update->bindParam(':morada', $morada, PDO::PARAM_STR);
+                                    $update->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
+                                    $update->bindParam(':nif', $nif, PDO::PARAM_STR);
+                                    $update->execute();
+
+                                    $resposta['sucesso'] = 'Utilizador registado com sucesso!';
+
+                                } catch(PDOException $e) {
+
+                                    $erros['imagem'] = 'Erro ao carregar a imagem! Devido: '. strip_tags($e->getMessage());
+                                }
+                        }
                     }
+                
+                   
                 };
             }
 

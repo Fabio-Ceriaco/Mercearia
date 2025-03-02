@@ -24,7 +24,7 @@ $(document).ready(function () {
           $(".result").show();
           setTimeout(() => {
             $(".result").hide();
-            window.location.href = "./home.php";
+            window.location.href = "./index.php";
           }, 500);
         } else {
           $(".result").append(
