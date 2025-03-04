@@ -748,6 +748,7 @@ nav {
   width: 300px;
   height: auto;
   display: none;
+  align-items: center;
   flex-direction: column;
   transform: translateX(-50%);
   opacity: 1;

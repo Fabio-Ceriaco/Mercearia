@@ -14,7 +14,6 @@ $(document).ready(function () {
         $(".result").text("");
 
         if (response.status === "success") {
-          console.log(response.cart_items[0].id);
           $(".result").append(
             `<div class="${response.status}"><span class="fa fa-check-circle"></span>${response.message}</div>`
           ); // mostra o resultado
@@ -40,7 +39,7 @@ $(document).ready(function () {
               }
               //programar forma de adicionar user_id ao botão checkout do carrinho
               cartItem += `<div class="in-cart-content" id="${item.id}" >
-                            
+                            <input class="hidden" type="hidden" value="${item.user_id}">
                             <img src="${item.imagemproduto}" alt="${item.nomeproduto}" class="prod-img">
                             <input class="prod-nome" type="text" value="${item.nomeproduto}" readonly>
                             <div class="cart-quantity-${item.id}">
@@ -186,7 +185,7 @@ $(document).ready(function () {
             $(".checkout-btn").remove(); // remove o botão de checkout
             // adiciona o label com o total
             $(".in-cart").prepend(
-              '<span class="empty">Carrinho vazio</span><label for="total" class="total" >Total: <input name="total" id="total" type="text" value="0.00 €" readonly></label><input class="checkout-btn" type="button" value="Checkout">'
+              `<span class="empty">Carrinho vazio</span><label for="total" class="total" >Total: <input name="total" id="total" type="text" value="0.00 €" readonly></label><input class="checkout-btn" type="button" value="Checkout">`
             );
             $(`#${response.produto_id}`).remove(); // remove o item do carrinho
             carrinho = []; // limpa o carrinho
@@ -222,6 +221,7 @@ $("body").ready(function () {
   let cartItem = "";
   const saveCarrinho = JSON.parse(localStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
   let total = 0;
+
   // verifica se existem itens no carrinho e preenche os elementos do carrinho
   if (saveCarrinho.length > 0) {
     $("#count").attr("value", saveCarrinho.length);
@@ -232,7 +232,7 @@ $("body").ready(function () {
     }
     $("#total").attr("value", `${total.toFixed(2)} €`); // adiciona o total ao label
     $(".empty").remove(); // remove o label com o total
-    $("lebel").remove(); // remove o botão de checkout
+    //$("lebel").remove(); // remove o botão de checkout
     // preenche os elementos do carrinho com os itens do carrinho
     saveCarrinho.forEach((item) => {
       cartItem = `<div class="in-cart-content" id="${item.id}" >
@@ -251,9 +251,11 @@ $("body").ready(function () {
   }
   // adiciona o label com o total e o botão de checkout caso existam itens no carrinho
   $(".cart-content").append(
-    `<label for="total">Total: <input name="total" class="total" id="total" type="text" value="${total.toFixed(
+    `<label for="total" class="total" >Total: <input name="total" id="total" type="text" value="${total.toFixed(
       2
-    )} €" readonly></span><input class="checkout-btn" type="button" value="Checkout">`
+    )}€" readonly></label><input class="checkout-btn" data-id="${
+      saveCarrinho[0]?.user_id
+    }" type="button" value="Checkout">`
   );
 });
 
@@ -267,3 +269,64 @@ $(".cart").on("click", function () {
     $(".cart-content").css("display", "none");
   }
 });
+
+$("body").on("click", ".checkout-btn", function (e) {
+  e.preventDefault();
+  const notEmpty = $("#count").attr("value");
+  const user_logged = $(this).attr("data-id");
+  console.log(user_logged);
+  console.log(notEmpty);
+  const urlCheckoutInfo = "pages/cart/checkoutinfo.php";
+  const urlCheckout = "pages/cart/checkout.php";
+  if (notEmpty > 0) {
+    if (user_logged !== undefined) {
+      console.log("Você precisa estar logado para efetuar o checkout!");
+      $("#content").load(urlCheckoutInfo, function (status) {
+        if (status === "error") {
+          console.log("Error: " + xhr.status + ": " + xhr.statusText);
+        } else {
+          console.log("Página carregada com sucesso!");
+        }
+      });
+    } else {
+      console.log("Você está logado! Efetuando checkout...");
+      $("#content").load(urlCheckout, function (status) {
+        if (status === "error") {
+          console.log("Error: " + xhr.status + ": " + xhr.statusText);
+        } else {
+          console.log("Página carregada com sucesso!");
+        }
+      });
+    }
+  }
+});
+
+/*$("body").on("click", ".checkout-btn", function (e) {
+  e.preventDefault();
+  const user_id = $(this).attr("data-id");
+  const url = "pages/cart/checkout.php";
+
+  if (user_id) {
+    $("#content").load(url, { user_id: user_id }, function (status) {
+      if (status === "error") {
+        console.log("Error: " + xhr.status + ": " + xhr.statusText);
+      } else {
+        $(".cart-content").css("display", "none");
+        $(".in-cart").empty(); // limpa o carrinho
+        localStorage.removeItem("cartItem"); // remove os itens do carrinho do localStorage
+        $("#count").attr("value", 0); // repor contador de itens a zero
+        $("#total").attr("value", "0.00 €"); // repor total a zero
+        $(".in-cart").prepend(
+          `<span class="empty">Carrinho vazio</span><label for="total" class="total" >Total: <input name="total" id="total" type="text" value="0.00 €" readonly></label><input class="checkout-btn" type="button" value="Checkout">`
+        );
+        $(".result").append(
+          `<div class="success"><span class="fa fa-check-circle"></span>Pedido efetuado com sucesso!</div>`
+        );
+        $(".result").show();
+        setTimeout(function () {
+          $(".result").hide("");
+        }, 2000);
+      }
+    });
+  }
+});*/
