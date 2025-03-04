@@ -11,7 +11,6 @@
         exit();
     }
         $user_id = $_SESSION['id'];
-        var_dump($user_id);
         $query = "SELECT * FROM users WHERE id = :id";
         $stmt = $conn -> prepare($query);
         $stmt -> bindParam(':id', $user_id);

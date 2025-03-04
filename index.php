@@ -21,7 +21,7 @@
     <title>Mercearia</title>
     <script src="https://kit.fontawesome.com/f98569bb37.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="./assets/style/principal.css">
+    <link rel="stylesheet" href="./assets/style/style.css">
    
   </head>
   <body>

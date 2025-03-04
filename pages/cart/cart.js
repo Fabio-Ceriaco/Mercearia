@@ -38,7 +38,9 @@ $(document).ready(function () {
               } else {
                 carrinho.push(item); // senão adiciona o item ao carrinho
               }
+              //programar forma de adicionar user_id ao botão checkout do carrinho
               cartItem += `<div class="in-cart-content" id="${item.id}" >
+                            
                             <img src="${item.imagemproduto}" alt="${item.nomeproduto}" class="prod-img">
                             <input class="prod-nome" type="text" value="${item.nomeproduto}" readonly>
                             <div class="cart-quantity-${item.id}">
