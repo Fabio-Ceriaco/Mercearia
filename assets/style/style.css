@@ -207,7 +207,8 @@ nav {
   color: #fff;
   text-decoration: underline;
 }
-.registo-btn {
+.registo-btn,
+.fornecerDados-btn {
   width: 150px;
   height: 40px;
   border-radius: 30px;
@@ -219,7 +220,8 @@ nav {
   transition: all ease 0.3s;
   margin-top: 10px;
 }
-.registo-btn:hover {
+.registo-btn:hover,
+.fornecerDados-btn:hover {
   background-color: #4eb060;
   color: #fff;
   transition: all ease 0.3s;
@@ -422,7 +424,8 @@ nav {
   box-shadow: 4px 10px 4px rgba(0, 0, 0, 0.2);
   border: 3px solid #4eb060;
 }
-.dados-form {
+.dados-form,
+.fornecerDados-form {
   width: 100%;
   display: flex;
   justify-content: center;

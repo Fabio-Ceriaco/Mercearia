@@ -330,3 +330,66 @@ $("body").on("click", ".checkout-btn", function (e) {
     });
   }
 });*/
+
+$(document).ready(function () {
+  $("body").on("submit", "#fornecerDadosForm", function (e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+    for (let key of formData.entries()) {
+      console.log(key + ":" + formData.get(key) + "\n");
+    }
+    let url = "pages/cart/fornecerDados.php";
+    $.ajax({
+      url: url,
+      data: formData,
+      type: "POST",
+      dataType: "json",
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        console.log(response);
+        $('.result').text("");
+        if (response.sucesso) {
+          
+          $(".result").append(
+            `<div class="success"><span class="fa fa-times-circle"></span>${response.sucesso}</div>`
+          );
+          $(".result").show();
+          setTimeout(function () {
+            $(".result").hide("");
+          }, 2000);
+        }
+        if(response.erros.campos_obrigatorios){
+          $('.result').append(
+            `<div class="error"><span class="fa fa-times-circle"></span>${response.erros.campos_obrigatorios}</div>`
+          )
+          $(".result").show();
+          setTimeout(function () {
+            $(".result").hide("");
+          }, 2000);
+        }
+        if(response.erros.nome){
+          $('#nomeError').text(response.erros.nome)
+        }
+        if(response.erros.email){
+          $('#emailError').text(response.erros.email)
+        }
+        if(response.erros.telefone){
+          $('#telefoneError').text(response.erros.telefone)
+        }
+        if(response.erros.morada){
+          $('#moradaError').text(response.erros.morada)
+        }
+        if(response.erros.codpostal){
+          $('#codPostalError').text(response.erros.codpostal)
+        }
+        if(response.erros.localidade){
+          $('#localidadeError').text(response.erros.localidade)
+        }
+        if(response.erros.nif){
+          $('#nifError').text(response.erros.nif)
+        }
+      },
+    });
+  });
+});

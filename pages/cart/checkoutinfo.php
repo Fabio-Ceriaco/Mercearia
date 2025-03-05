@@ -1,7 +1,7 @@
 <section class="registo-section">
     <h2>Dados para Envio</h2>
     
-    <form method="post" enctype="multipart/form-data" id="registoForm" class="registo-form ">
+    <form method="post" enctype="multipart/form-data" id="fornecerDadosForm" class="fornecerDados-form ">
         <div class="grupo-registo">
         <input type="text" id="nome" name="nome" require>
         <label for="nome" >Nome:</label><br>
@@ -17,13 +17,13 @@
         <div class="grupo-registo">
         <input type="text" id="localidade" name="localidade" require>
         <label for="localidade" >Localidade:</label><br>
-        <span class="errorRegisto" id="moradaError"></span>
+        <span class="errorRegisto" id="localidadeError"></span>
         </div>
 
         <div class="grupo-registo">
         <input type="text" id="cod-postal" name="cod-postal" require>
         <label for="cod-postal" >Codigo Postal:</label><br>
-        <span class="errorRegisto" id="moradaError"></span>
+        <span class="errorRegisto" id="codPostalError"></span>
         </div>
 
         <div class="grupo-registo">
@@ -46,6 +46,6 @@
         
         
         <label for="terms" class="terms-label"><input type="checkbox" id="terms" name="terms" require> Aceitar os Termos e Condições</label><br><br>
-        <input type="submit" value="Fornecer dados" class="registo-btn">
+        <input type="submit" value="Fornecer dados" class="fornecerDados-btn">
     </form>
 </section>
