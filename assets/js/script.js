@@ -110,4 +110,10 @@ $(document).ready(function () {
     $("#dadosForm input").prop("readonly", false); // Enable the input field
     $("input[type='file']").prop("disabled", false); // Enable the submit button
   });
+
+  //evento close
+  $("body").on("click", "#close", function (e) {
+    e.preventDefault();
+    window.location.href = "./index.php";
+  });
 });

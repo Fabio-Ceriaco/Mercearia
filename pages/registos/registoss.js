@@ -72,6 +72,12 @@ $(document).ready(function () {
             $("#nifError").text("");
             $("#nifError").text(response.erros.nif);
           }
+          if (response.erros.codpostal) {
+            $("#codPostalError").text(response.erros.codpostal);
+          }
+          if (response.erros.localidade) {
+            $("#localidadeError").text(response.erros.localidade);
+          }
 
           if (response.erros.size) {
             $("#imgError").text("");

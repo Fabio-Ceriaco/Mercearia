@@ -10,7 +10,10 @@
     $data_atual =intval(date('Y-m-d'));
     $regex_nome = '/[A-Z][a-z]* [A-Z][a-z]*/';
     $regex_morada = '/[A-Za-z0-9., -]+/';
-   
+    $regex_localidade = '/[\w\W]/';
+    $regex_postal_cod = '/[0-9]{4}-[0-9]{3}/';
+    $regex_telefone_nif = '/^[0-9]{9}$/';
+    $tipo = 'cliente';
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -23,6 +26,8 @@
             $cpassword = htmlentities($_POST['cpassword']);
             $telefone = htmlspecialchars($_POST['telefone']);
             $morada = htmlspecialchars($_POST['morada']);
+            $localidade = htmlspecialchars($_POST['localidade']);
+            $codPostal = htmlspecialchars($_POST['cod-postal']);
             $data_nascimento = htmlspecialchars($_POST['data_nascimento']);
             $nif = htmlspecialchars($_POST['nif']);
             $data_n_format = date_create($data_nascimento);
@@ -31,7 +36,7 @@
             
             
 
-            if(empty($nome) || empty($username) || empty($email) || empty($password) || empty($telefone) || empty($morada) || empty($data_nascimento) || empty($nif)){
+            if(empty($nome) || empty($username) || empty($email) || empty($password) || empty($telefone) || empty($morada) || empty($data_nascimento) || empty($nif) || empty($localidade) || empty($codPostal)){
                 
                 $erros['campos_obrigatorios'] = 'Todos os campos são obrigatórios!';
                 
@@ -40,7 +45,7 @@
                 
                 $erros['nome'] = 'O nome introduzido não é válido!';
             }
-            if(!preg_match('/^[0-9]{9}$/', $nif)){
+            if(!preg_match($regex_telefone_nif, $nif)){
                 
                 $erros['nif'] = 'O NIF introduzido não é válido!';
             }
@@ -56,9 +61,8 @@
 
                $erros['email'] = 'O email introduzido não é válido!';
             }
-            if(strlen($telefone) < 9 || !is_numeric($telefone)){
-
-                $erros['telefone'] = 'O telefone introduzido não é válido!';
+            if(!preg_match($regex_telefone_nif, $telefone)){
+                $erros['telefone'] = 'Telefone inválido!';
             }
             
             if(strlen($password) < 8 || strlen($password) > 20){
@@ -109,17 +113,20 @@
                         
                         if($certo){
                             try {
-                                $inserir = $conn->prepare("INSERT INTO users (nome, username, email, password, telefone, morada, data_nascimento, nif, nome_imagem, imagem_path) VALUES (:nome, :username, :email, :password, :telefone, :morada, :data_nascimento, :nif, :nome_imagem, :imagem_path)");
+                                $inserir = $conn->prepare("INSERT INTO users (nome, username, email, password, telefone, morada, localidade, cod_postal,  data_nascimento, nif, nome_imagem, imagem_path, tipo) VALUES (:nome, :username, :email, :password, :telefone, :morada, :localidade, :cod_postal :data_nascimento, :nif, :nome_imagem, :imagem_path, :tipo)");
                                 $inserir->bindParam(':nome', $nome, PDO::PARAM_STR);
                                 $inserir->bindParam(':username', $username, PDO::PARAM_STR);
                                 $inserir->bindParam(':email', $email, PDO::PARAM_STR);
                                 $inserir->bindParam(':password', $hashed_password, PDO::PARAM_STR);
                                 $inserir->bindParam(':telefone', $telefone, PDO::PARAM_STR);
                                 $inserir->bindParam(':morada', $morada, PDO::PARAM_STR);
+                                $inserir->bindParam(':localidade', $localidade, PDO::PARAM_STR);
+                                $inserir->bindParam(':cod_postal', $cod_postal, PDO::PARAM_STR);
                                 $inserir->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
                                 $inserir->bindParam(':nif', $nif, PDO::PARAM_STR);
                                 $inserir->bindParam(':nome_imagem', $nomeImagem, PDO::PARAM_STR);
                                 $inserir->bindParam(':imagem_path', $open_path, PDO::PARAM_STR);
+                                $inserir->bindParam(':tipo', $tipo, PDO::PARAM_STR);
                                 $inserir->execute();
 
                                 $resposta['sucesso'] = 'Utilizador registado com sucesso!';
@@ -134,15 +141,18 @@
 
                             try {
 
-                                $inserir = $conn->prepare('INSERT INTO users (nome, username, email, password, telefone, morada, data_nascimento, nif) VALUES (:nome, :username, :email, :password, :telefone, :morada, :data_nascimento, :nif)');
+                                $inserir = $conn->prepare('INSERT INTO users (nome, username, email, password, telefone, morada, localidade, cod_postal data_nascimento, nif, tipo) VALUES (:nome, :username, :email, :password, :telefone, :morada, :localidade, :cod_postal :data_nascimento, :nif, :tipo)');
                                 $inserir->bindParam(':nome', $nome, PDO::PARAM_STR);
                                 $inserir->bindParam(':username', $username, PDO::PARAM_STR);
                                 $inserir->bindParam(':email', $email, PDO::PARAM_STR);
                                 $inserir->bindParam(':password', $hashed_password, PDO::PARAM_STR);
                                 $inserir->bindParam(':telefone', $telefone, PDO::PARAM_STR);
                                 $inserir->bindParam(':morada', $morada, PDO::PARAM_STR);
+                                $insert->bindParam(':localidade', $localidade, PDO::PARAM_STR);
+                                $inserir->bindParam(':cod_postal', $cod_postal, PDO::PARAM_STR);
                                 $inserir->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
                                 $inserir->bindParam(':nif', $nif, PDO::PARAM_STR);
+                                $inserir->bindParam(':tipo', $tipo, PDO::PARAM_STR);
                                 $inserir->execute();
 
                                 $resposta['sucesso'] = 'Utilizador registado com sucesso!';

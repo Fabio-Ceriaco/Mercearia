@@ -253,7 +253,7 @@ $("body").ready(function () {
   $(".cart-content").append(
     `<label for="total" class="total" >Total: <input name="total" id="total" type="text" value="${total.toFixed(
       2
-    )}€" readonly></label><input class="checkout-btn" data-id="${
+    )}€" readonly></label><input class="checkout-btn" data-user="${
       saveCarrinho[0]?.user_id
     }" type="button" value="Checkout">`
   );
@@ -273,7 +273,7 @@ $(".cart").on("click", function () {
 $("body").on("click", ".checkout-btn", function (e) {
   e.preventDefault();
   const notEmpty = $("#count").attr("value");
-  const user_logged = $(this).attr("data-id");
+  const user_logged = $(this).attr("data-user");
   console.log(user_logged);
   console.log(notEmpty);
   const urlCheckoutInfo = "pages/cart/checkoutinfo.php";
@@ -301,44 +301,15 @@ $("body").on("click", ".checkout-btn", function (e) {
   }
 });
 
-/*$("body").on("click", ".checkout-btn", function (e) {
-  e.preventDefault();
-  const user_id = $(this).attr("data-id");
-  const url = "pages/cart/checkout.php";
-
-  if (user_id) {
-    $("#content").load(url, { user_id: user_id }, function (status) {
-      if (status === "error") {
-        console.log("Error: " + xhr.status + ": " + xhr.statusText);
-      } else {
-        $(".cart-content").css("display", "none");
-        $(".in-cart").empty(); // limpa o carrinho
-        localStorage.removeItem("cartItem"); // remove os itens do carrinho do localStorage
-        $("#count").attr("value", 0); // repor contador de itens a zero
-        $("#total").attr("value", "0.00 €"); // repor total a zero
-        $(".in-cart").prepend(
-          `<span class="empty">Carrinho vazio</span><label for="total" class="total" >Total: <input name="total" id="total" type="text" value="0.00 €" readonly></label><input class="checkout-btn" type="button" value="Checkout">`
-        );
-        $(".result").append(
-          `<div class="success"><span class="fa fa-check-circle"></span>Pedido efetuado com sucesso!</div>`
-        );
-        $(".result").show();
-        setTimeout(function () {
-          $(".result").hide("");
-        }, 2000);
-      }
-    });
-  }
-});*/
-
+//checkout utilizador
 $(document).ready(function () {
   $("body").on("submit", "#fornecerDadosForm", function (e) {
     e.preventDefault();
-    let formData = new FormData(this);
+    const formData = new FormData(this);
     for (let key of formData.entries()) {
       console.log(key + ":" + formData.get(key) + "\n");
     }
-    let url = "pages/cart/fornecerDados.php";
+    const url = "pages/cart/fornecerDados.php";
     $.ajax({
       url: url,
       data: formData,
@@ -347,47 +318,81 @@ $(document).ready(function () {
       contentType: false,
       processData: false,
       success: function (response) {
+        console.log(formData.get("nome"));
+
         console.log(response);
-        $('.result').text("");
+        $(".result").text("");
         if (response.sucesso) {
-          
+          const user_nif = $("#nif").val();
+          const url = "pages/cart/utilizadorCheckout.php";
+
+          $.ajax({
+            url: url,
+            type: "POST",
+            data: { user_nif: user_nif },
+            dataType: "json",
+            success: function (response) {
+              console.log(response);
+              if (response.status === "success") {
+                console.log("Página carregada com sucesso!");
+                $("#content").load("pages/cart/orders.php", function (status) {
+                  if (status === "error") {
+                    console.log("Error: " + xhr.status + ": " + xhr.statusText);
+                  } else {
+                    console.log("Página carregada com sucesso!");
+                  }
+                });
+              } else {
+              }
+            },
+          });
           $(".result").append(
             `<div class="success"><span class="fa fa-times-circle"></span>${response.sucesso}</div>`
           );
           $(".result").show();
           setTimeout(function () {
             $(".result").hide("");
+            $("#content").load("pages/cart/orders.php", function (status) {
+              if (status === "error") {
+                console.log("Error: " + xhr.status + ":" + xhr.statusText);
+              } else {
+                console.log("Página carregada com sucesso!");
+              }
+            });
           }, 2000);
         }
-        if(response.erros.campos_obrigatorios){
-          $('.result').append(
+        if (response.erros.campos_obrigatorios) {
+          $(".result").append(
             `<div class="error"><span class="fa fa-times-circle"></span>${response.erros.campos_obrigatorios}</div>`
-          )
+          );
           $(".result").show();
           setTimeout(function () {
             $(".result").hide("");
           }, 2000);
         }
-        if(response.erros.nome){
-          $('#nomeError').text(response.erros.nome)
+        if (response.erros.nome) {
+          $("#nomeError").text(response.erros.nome);
         }
-        if(response.erros.email){
-          $('#emailError').text(response.erros.email)
+        if (response.erros.email) {
+          $("#emailError").text(response.erros.email);
         }
-        if(response.erros.telefone){
-          $('#telefoneError').text(response.erros.telefone)
+        if (response.erros.telefone) {
+          $("#telefoneError").text(response.erros.telefone);
         }
-        if(response.erros.morada){
-          $('#moradaError').text(response.erros.morada)
+        if (response.erros.morada) {
+          $("#moradaError").text(response.erros.morada);
         }
-        if(response.erros.codpostal){
-          $('#codPostalError').text(response.erros.codpostal)
+        if (response.erros.idade) {
+          $("#data_nascimentoError").text(response.erros.idade);
         }
-        if(response.erros.localidade){
-          $('#localidadeError').text(response.erros.localidade)
+        if (response.erros.codpostal) {
+          $("#codPostalError").text(response.erros.codpostal);
         }
-        if(response.erros.nif){
-          $('#nifError').text(response.erros.nif)
+        if (response.erros.localidade) {
+          $("#localidadeError").text(response.erros.localidade);
+        }
+        if (response.erros.nif) {
+          $("#nifError").text(response.erros.nif);
         }
       },
     });

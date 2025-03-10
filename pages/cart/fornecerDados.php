@@ -6,9 +6,10 @@
 
     $erros = [];
     $resposta = [];
+    $data_atual =intval(date('Y-m-d'));
     $regex_nome = '/[A-Z][a-z]* [A-Z][a-z]*/';
     $regex_localidade = '/[\w\W]/';
-    $regex_morada = '/[\w\W]+\s(\d+)/' ;
+    $regex_morada = '/[A-Za-z0-9., -]+/';
     $regex_postal_cod = '/[0-9]{4}-[0-9]{3}/';
     $regex_telefone_nif = '/^[0-9]{9}$/';
     
@@ -21,8 +22,11 @@
         $email = htmlspecialchars($_POST['email']);
         $telefone = htmlspecialchars($_POST['telefone']);
         $nif = htmlspecialchars($_POST['nif']);
+        $data_nascimento = htmlspecialchars($_POST['data_nascimento']);
+        $data_n_format = date_create($data_nascimento);
+        $data_n_format = intval(date_format($data_n_format, 'Y-m-d'));
 
-        if(empty($nome) || empty($morada) || empty($localidade) || empty($codPostal) || empty($email) || empty($telefone) || empty($nif)){
+        if(empty($nome) || empty($morada) || empty($localidade) || empty($codPostal) || empty($email) || empty($telefone) || empty($nif) || empty($data_nascimento)){
             $erros['campos_obrigatorios'] = 'Todos os campos são obrigatórios!';
         }
         if(!preg_match($regex_nome, $nome)){
@@ -46,21 +50,27 @@
         if(!preg_match($regex_telefone_nif, $nif)){
             $erros['nif'] = 'NIF inválido!';
         }
+        if(($data_atual - $data_n_format) < 18){
+                
+            $erros['idade'] = 'Deve ter pelo menos 18 anos!';
+        }
 
         if(count($erros) === 0){
             try{
 
-                $insert = $conn ->prepare("INSERT INTO temp_users (nome, morada, localidade, cod_postal, email, telefone, nif) VALUES (:nome, :morada, :localidade, :cod_postal, :email, :telefone, :nif)");
+                $insert = $conn ->prepare("INSERT INTO users (nome,  email, telefone, morada, data_nascimento, nif, localidade, cod_postal ) VALUES (:nome, :email, :telefone, :morada, :data_nascimento, :nif, :localidade, :cod_postal)");
             $insert -> bindParam(':nome', $nome, PDO::PARAM_STR);
             $insert -> bindParam(':morada', $morada, PDO::PARAM_STR);
             $insert -> bindParam(':localidade', $localidade, PDO::PARAM_STR);
             $insert -> bindParam(':cod_postal', $codPostal, PDO::PARAM_STR);
             $insert -> bindParam(':email', $email, PDO::PARAM_STR);
             $insert -> bindParam(':telefone', $telefone, PDO::PARAM_STR);
+            $insert -> bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
             $insert ->bindParam(':nif', $nif, PDO::PARAM_STR);
             $insert -> execute();
 
             $resposta['sucesso'] = 'Utilizador registado com sucesso!';
+
 
             }catch(PDOException $e){
                 $erros['bd'] = 'Erro ao registar utilizador! Devido: '. strip_tags($e->getMessage());

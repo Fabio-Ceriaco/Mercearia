@@ -50,6 +50,18 @@
         </div>
 
         <div class="grupo-registo">
+        <input type="text" id="localidade" name="localidade" require>
+        <label for="localidade" >Localidade:</label><br>
+        <span class="errorRegisto" id="localidadeError"></span>
+        </div>
+
+        <div class="grupo-registo">
+        <input type="text" id="cod-postal" name="cod-postal" require>
+        <label for="cod-postal" >Codigo Postal:</label><br>
+        <span class="errorRegisto" id="codPostalError"></span>
+        </div>
+
+        <div class="grupo-registo">
         <input type="text" id="data_nascimento" name="data_nascimento"  require>
         <label for="data_nascimento" >Data de Nascimento:</label><br>
         <span class="errorRegisto" id="data_nascimentoError"></span>

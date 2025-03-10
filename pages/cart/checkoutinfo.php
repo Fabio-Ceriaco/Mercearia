@@ -1,6 +1,6 @@
 <section class="registo-section">
     <h2>Dados para Envio</h2>
-    
+    <i class="fas fa-times" id="close"></i>
     <form method="post" enctype="multipart/form-data" id="fornecerDadosForm" class="fornecerDados-form ">
         <div class="grupo-registo">
         <input type="text" id="nome" name="nome" require>
@@ -36,6 +36,12 @@
         <input type="tel" id="telefone" name="telefone" require>
         <label for="telefone" >Telefone:</label><br>
         <span class="errorRegisto" id="telefoneError"></span>
+        </div>
+
+        <div class="grupo-registo">
+        <input type="text" id="data_nascimento" name="data_nascimento"  require>
+        <label for="data_nascimento" >Data de Nascimento:</label><br>
+        <span class="errorRegisto" id="data_nascimentoError"></span>
         </div>
         
         <div class="grupo-registo">

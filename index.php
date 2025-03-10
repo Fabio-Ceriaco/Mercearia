@@ -106,8 +106,8 @@
      ?>
     
     <!--script-->
-    <script type="text/javascript" src="./assets/js/principal.js"></script>
-    <script type="text/javascript" src="./pages/cart/cart.js"></script>
+    <script type="text/javascript" src="./assets/js/script.js"></script>
+    <script type="text/javascript" src="./pages/cart/cartx.js"></script>
     <script type="text/javascript" src="./pages/registos/registoss.js"></script>
     <script type="text/javascript" src="./pages/logs/log.js"></script>
     <script type="text/javascript" src="./pages/areaCliente/editar.js"></script>

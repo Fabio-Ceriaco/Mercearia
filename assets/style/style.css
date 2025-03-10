@@ -407,7 +407,14 @@ nav {
   background-color: rgba(78, 176, 96, 0.8);
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
 }
-
+#close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+}
 .dados-section h2 {
   font-size: 1.5rem;
   font-weight: 600;
@@ -494,6 +501,61 @@ nav {
   color: #fff;
   transition: all ease 0.3s;
   border: 1px solid #fff;
+}
+
+/*orders*/
+
+.orders {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  align-self: center;
+  margin: 0 auto;
+  width: 80%;
+  height: 100%;
+  border: 1px solid #000;
+  border-radius: 30px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+}
+
+.orders h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  margin-top: 10px;
+  align-self: center;
+}
+
+.ordersUserData,
+.orderProducts {
+  width: 80%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  justify-content: space-around;
+  align-items: flex-start;
+}
+.orderItem,
+.orderProdutosHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+hr {
+  width: 90%;
+}
+.orderItem img {
+  width: 50px;
+  height: 40px;
 }
 
 /*Search-banner*/
