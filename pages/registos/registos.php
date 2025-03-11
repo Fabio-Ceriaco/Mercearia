@@ -113,7 +113,7 @@
                         
                         if($certo){
                             try {
-                                $inserir = $conn->prepare("INSERT INTO users (nome, username, email, password, telefone, morada, localidade, cod_postal,  data_nascimento, nif, nome_imagem, imagem_path, tipo) VALUES (:nome, :username, :email, :password, :telefone, :morada, :localidade, :cod_postal :data_nascimento, :nif, :nome_imagem, :imagem_path, :tipo)");
+                                $inserir = $conn->prepare("INSERT INTO users (nome, username, email, password, telefone, morada, localidade, cod_postal,  data_nascimento, nif, nome_imagem, imagem_path, tipo) VALUES (:nome, :username, :email, :password, :telefone, :morada, :localidade, :cod_postal, :data_nascimento, :nif, :nome_imagem, :imagem_path, :tipo)");
                                 $inserir->bindParam(':nome', $nome, PDO::PARAM_STR);
                                 $inserir->bindParam(':username', $username, PDO::PARAM_STR);
                                 $inserir->bindParam(':email', $email, PDO::PARAM_STR);
@@ -121,7 +121,7 @@
                                 $inserir->bindParam(':telefone', $telefone, PDO::PARAM_STR);
                                 $inserir->bindParam(':morada', $morada, PDO::PARAM_STR);
                                 $inserir->bindParam(':localidade', $localidade, PDO::PARAM_STR);
-                                $inserir->bindParam(':cod_postal', $cod_postal, PDO::PARAM_STR);
+                                $inserir->bindParam(':cod_postal', $codPostal, PDO::PARAM_STR);
                                 $inserir->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
                                 $inserir->bindParam(':nif', $nif, PDO::PARAM_STR);
                                 $inserir->bindParam(':nome_imagem', $nomeImagem, PDO::PARAM_STR);
@@ -141,15 +141,15 @@
 
                             try {
 
-                                $inserir = $conn->prepare('INSERT INTO users (nome, username, email, password, telefone, morada, localidade, cod_postal data_nascimento, nif, tipo) VALUES (:nome, :username, :email, :password, :telefone, :morada, :localidade, :cod_postal :data_nascimento, :nif, :tipo)');
+                                $inserir = $conn->prepare("INSERT INTO users (nome, username, email, password, telefone, morada, localidade, cod_postal, data_nascimento, nif, tipo) VALUES (:nome, :username, :email, :password, :telefone, :morada, :localidade, :cod_postal, :data_nascimento, :nif, :tipo)");
                                 $inserir->bindParam(':nome', $nome, PDO::PARAM_STR);
                                 $inserir->bindParam(':username', $username, PDO::PARAM_STR);
                                 $inserir->bindParam(':email', $email, PDO::PARAM_STR);
                                 $inserir->bindParam(':password', $hashed_password, PDO::PARAM_STR);
                                 $inserir->bindParam(':telefone', $telefone, PDO::PARAM_STR);
                                 $inserir->bindParam(':morada', $morada, PDO::PARAM_STR);
-                                $insert->bindParam(':localidade', $localidade, PDO::PARAM_STR);
-                                $inserir->bindParam(':cod_postal', $cod_postal, PDO::PARAM_STR);
+                                $inserir->bindParam(':localidade', $localidade, PDO::PARAM_STR);
+                                $inserir->bindParam(':cod_postal', $codPostal, PDO::PARAM_STR);
                                 $inserir->bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
                                 $inserir->bindParam(':nif', $nif, PDO::PARAM_STR);
                                 $inserir->bindParam(':tipo', $tipo, PDO::PARAM_STR);

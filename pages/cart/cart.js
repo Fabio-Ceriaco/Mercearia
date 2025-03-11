@@ -254,7 +254,7 @@ $("body").ready(function () {
     `<label for="total" class="total" >Total: <input name="total" id="total" type="text" value="${total.toFixed(
       2
     )}€" readonly></label><input class="checkout-btn" data-user="${
-      saveCarrinho[0]?.user_id
+      saveCarrinho[0]?.user_id ? $(this).attr("data-user") : "null"
     }" type="button" value="Checkout">`
   );
 });
@@ -277,9 +277,9 @@ $("body").on("click", ".checkout-btn", function (e) {
   console.log(user_logged);
   console.log(notEmpty);
   const urlCheckoutInfo = "pages/cart/checkoutinfo.php";
-  const urlCheckout = "pages/cart/checkout.php";
+  const urlCheckout = "pages/cart/orders.php";
   if (notEmpty > 0) {
-    if (user_logged !== undefined) {
+    if (user_logged == "null") {
       console.log("Você precisa estar logado para efetuar o checkout!");
       $("#content").load(urlCheckoutInfo, function (status) {
         if (status === "error") {
@@ -301,7 +301,9 @@ $("body").on("click", ".checkout-btn", function (e) {
   }
 });
 
-//checkout utilizador
+/*========================================================================================================================*/
+
+//checkout utilizador não registado
 $(document).ready(function () {
   $("body").on("submit", "#fornecerDadosForm", function (e) {
     e.preventDefault();
@@ -323,6 +325,7 @@ $(document).ready(function () {
         console.log(response);
         $(".result").text("");
         if (response.sucesso) {
+          //carregamento de dados fornecidos pelo utilizador e redirecionamento para a página de pedidos
           const user_nif = $("#nif").val();
           const url = "pages/cart/utilizadorCheckout.php";
 
@@ -333,33 +336,21 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
               console.log(response);
-              if (response.status === "success") {
-                console.log("Página carregada com sucesso!");
-                $("#content").load("pages/cart/orders.php", function (status) {
-                  if (status === "error") {
-                    console.log("Error: " + xhr.status + ": " + xhr.statusText);
-                  } else {
-                    console.log("Página carregada com sucesso!");
-                  }
-                });
-              } else {
-              }
             },
           });
           $(".result").append(
             `<div class="success"><span class="fa fa-times-circle"></span>${response.sucesso}</div>`
           );
           $(".result").show();
-          setTimeout(function () {
-            $(".result").hide("");
-            $("#content").load("pages/cart/orders.php", function (status) {
-              if (status === "error") {
-                console.log("Error: " + xhr.status + ":" + xhr.statusText);
-              } else {
-                console.log("Página carregada com sucesso!");
-              }
-            });
-          }, 2000);
+
+          $(".result").hide("");
+          $("#content").load("pages/cart/orders.php", function (status) {
+            if (status === "error") {
+              console.log("Error: " + xhr.status + ":" + xhr.statusText);
+            } else {
+              console.log("Página carregada com sucesso! out ajax");
+            }
+          });
         }
         if (response.erros.campos_obrigatorios) {
           $(".result").append(
@@ -395,6 +386,24 @@ $(document).ready(function () {
           $("#nifError").text(response.erros.nif);
         }
       },
+    });
+  });
+});
+
+/*========================================================================================================================*/
+
+//finalizar encomenda
+
+$(document).ready(function () {
+  $("body").on("click", ".order-btn", function (e) {
+    e.preventDefault();
+
+    $("#content").load("pages/cart/finalizarOrder.php", function (status) {
+      if (status === "error") {
+        console.log("Error: " + xhr.status + ": " + xhr.statusText);
+      } else {
+        console.log("Página carregada com sucesso! in ajax");
+      }
     });
   });
 });

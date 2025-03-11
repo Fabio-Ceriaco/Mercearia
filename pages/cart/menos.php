@@ -62,7 +62,7 @@
             if($queryPlus && $queryStock){ //se as queries forem executadas com sucesso
 
                 //obter novos dados do carrinho para mostrar na página
-                $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, carrinho.quantidade, carrinho.preco,
+                $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome_produto As nomeproduto, carrinho.quantidade, carrinho.preco,
                 produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.id = :id ');
                 $query->bindParam(':id', $value, PDO::PARAM_INT);
                 $query->execute();

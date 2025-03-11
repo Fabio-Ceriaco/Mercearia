@@ -35,7 +35,7 @@ error_reporting(E_ALL);
     
                 // verificar se existe stock do produto
                 $product_id = strip_tags($product['id']);
-                $product_name = strip_tags($product['nome']);  
+                $product_name = strip_tags($product['nome_produto']);  
                 $product_preco = strip_tags($product['preco']);
                 $product_stock = strip_tags($product['stock']);
                 $product_descricao = strip_tags($product['descricao']);
@@ -81,7 +81,7 @@ error_reporting(E_ALL);
                             $stock->execute();
                             
                             if($create){ //se adicionado com sucesso
-                                $query = $conn->prepare('SELECT carrinho.id, carrinho.user_id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, quantidade, carrinho.preco,
+                                $query = $conn->prepare('SELECT carrinho.id, carrinho.user_id, carrinho.produto_id As idProduto, produtos.nome_produto As nomeproduto, quantidade, carrinho.preco,
                                  produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
                                 $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
                                 $query->execute();
@@ -134,7 +134,7 @@ error_reporting(E_ALL);
                             
                             if($stockNew){ //se stockNew foram actualizados com sucesso
                                 //obter itens do carrinho para mostrar na página
-                                $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, carrinho.quantidade, carrinho.preco,
+                                $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome_produto As nomeproduto, carrinho.quantidade, carrinho.preco,
                                  produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
                                 $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
                                 $query->execute();
@@ -191,7 +191,7 @@ error_reporting(E_ALL);
 
             // verificar se existe stock do produto
             $product_id = strip_tags($product['id']);
-            $product_name = strip_tags($product['nome']);  
+            $product_name = strip_tags($product['nome_produto']);  
             $product_preco = strip_tags($product['preco']);
             $product_stock = strip_tags($product['stock']);
             $product_descricao = strip_tags($product['descricao']);
@@ -236,7 +236,7 @@ error_reporting(E_ALL);
                         $stock->execute();
                         
                         if($create){ //se adicionado com sucesso
-                            $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, quantidade, carrinho.preco,
+                            $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome_produto As nomeproduto, quantidade, carrinho.preco,
                              produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
                             $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
                             $query->execute();
@@ -289,7 +289,7 @@ error_reporting(E_ALL);
                         
                         if($stockNew){ //se stockNew foram actualizados com sucesso
                             //obter itens do carrinho para mostrar na página
-                            $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome As nomeproduto, carrinho.quantidade, carrinho.preco,
+                            $query = $conn->prepare('SELECT carrinho.id, carrinho.produto_id As idProduto, produtos.nome_produto As nomeproduto, carrinho.quantidade, carrinho.preco,
                              produtos.imagem As imagemproduto  FROM carrinho join produtos ON carrinho.produto_id = produtos.id Where carrinho.produto_id = :product_id ');
                             $query->bindParam(':product_id', $product_id, PDO::PARAM_INT);
                             $query->execute();

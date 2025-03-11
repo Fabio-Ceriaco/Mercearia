@@ -43,6 +43,7 @@
             <li><a href="produtos">Produtos</a></li>
             <li><a href="#" >Folhetos</a></li>
         </ul>
+        
          <!--cart-->
         <div class="cart" >
             <a href="#" class="cart" id="cart"><i class="fa-solid fa-cart-shopping"></i><input id="count" type="text" value="0" readonly></a>
