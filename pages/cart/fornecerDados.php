@@ -69,6 +69,10 @@
             $insert -> bindParam(':data_nascimento', $data_nascimento, PDO::PARAM_STR);
             $insert ->bindParam(':nif', $nif, PDO::PARAM_STR);
             $insert -> execute();
+            $dados_inseridos = $conn->lastInsertId();
+
+            $resposta['dados_inseridos'] = $dados_inseridos;
+
 
             $resposta['sucesso'] = 'Utilizador registado com sucesso!';
 

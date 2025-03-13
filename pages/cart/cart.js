@@ -3,6 +3,7 @@
 $(document).ready(function () {
   $("body").on("click", ".cart-btn", function (e) {
     e.preventDefault();
+
     const id = $(this).attr("data-id");
     const url = "pages/cart/cart.php";
     $.ajax({
@@ -14,6 +15,10 @@ $(document).ready(function () {
         $(".result").text("");
 
         if (response.status === "success") {
+          sessionStorage.setItem(
+            "user_id",
+            JSON.stringify(response.cart_items[0].user_id)
+          );
           $(".result").append(
             `<div class="${response.status}"><span class="fa fa-check-circle"></span>${response.message}</div>`
           ); // mostra o resultado
@@ -21,7 +26,7 @@ $(document).ready(function () {
           $("#count").attr("value", response.count); // atualiza o contador de itens no carrinho
           $("#total").attr("value", `${response.total} €`); // atualiza o preço total do carrinho
           let cartItem = "";
-          let carrinho = JSON.parse(localStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
+          let carrinho = JSON.parse(sessionStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
           if (response.cart_items[0].id) {
             $(".empty").remove();
             $(`#${response.cart_items[0].id}`).remove(); // remove o item do carrinho caso ele já exista
@@ -53,7 +58,7 @@ $(document).ready(function () {
                             `;
             });
             $(".in-cart").prepend(cartItem); // adiciona os itens do carrinho ao topo da lista
-            localStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
+            sessionStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
           }
         } else {
           $(".result").append(
@@ -84,9 +89,8 @@ $(document).ready(function () {
       data: { id: id },
       dataType: "JSON",
       success: function (response, textStatus, jqXHR) {
-        console.log(response);
         if (response.status === "success") {
-          let carrinho = JSON.parse(localStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
+          let carrinho = JSON.parse(sessionStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
           // atualiza a quantidade do item no carrinho
           for (let i = 0; i < carrinho.length; i++) {
             if (carrinho[i].id === response.cart_items[0].id) {
@@ -98,7 +102,7 @@ $(document).ready(function () {
           $('.in-cart-content[id="' + id + '"]')
             .find(".quantidade")
             .val(response.cart_items[0].quantidade); // atualiza a quantidade do item no carrinho
-          localStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
+          sessionStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
         } else {
           $(".result").append(
             `<div class="${response.status}"><span class="fa fa-times-circle"></span>${response.message}</div>`
@@ -127,7 +131,7 @@ $(document).ready(function () {
       dataType: "JSON",
       success: function (response, textStatus, jqXHR) {
         if (response.status === "success") {
-          let carrinho = JSON.parse(localStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
+          let carrinho = JSON.parse(sessionStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
           // atualiza a quantidade do item no carrinho
           for (let i = 0; i < carrinho.length; i++) {
             if (carrinho[i].id === response.cart_items[0].id) {
@@ -139,7 +143,7 @@ $(document).ready(function () {
           $('.in-cart-content[id="' + id + '"]')
             .find(".quantidade")
             .val(response.cart_items[0].quantidade); // atualiza a quantidade do item no carrinho
-          localStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
+          sessionStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
         } else {
           $(".result").append(
             `<div class="${response.status}"><span class="fa fa-times-circle"></span>${response.message}</div>`
@@ -162,6 +166,7 @@ $(document).ready(function () {
 
   $("body").on("click", ".remove", function (e) {
     e.preventDefault();
+    let user_id = sessionStorage.getItem("user_id");
     const id = $(this).attr("data-id");
     const url = "pages/cart/remover.php";
     $.ajax({
@@ -170,6 +175,7 @@ $(document).ready(function () {
       data: { id: id },
       dataType: "JSON",
       success: function (response, textStatus, jqXHR) {
+        console.log(response);
         $(".result").text("");
         if (response.status === "success") {
           $(".result").append(
@@ -178,14 +184,14 @@ $(document).ready(function () {
           $(".result").show();
           $("#count").attr("value", response.count);
           $("#total").attr("value", `${response.total} €`);
-          let carrinho = JSON.parse(localStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
+          let carrinho = JSON.parse(sessionStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
           // verifica se o item existe no carrinho
           if (response.count <= 0) {
             $("label").remove(); // remove o label com o total
             $(".checkout-btn").remove(); // remove o botão de checkout
             // adiciona o label com o total
             $(".in-cart").prepend(
-              `<span class="empty">Carrinho vazio</span><label for="total" class="total" >Total: <input name="total" id="total" type="text" value="0.00 €" readonly></label><input class="checkout-btn" type="button" value="Checkout">`
+              `<span class="empty">Carrinho vazio</span><label for="total" class="total" >Total: <input name="total" id="total" type="text" value="0.00 €" readonly></label><input class="checkout-btn" data-user="${user_id}" type="button" value="Checkout">`
             );
             $(`#${response.produto_id}`).remove(); // remove o item do carrinho
             carrinho = []; // limpa o carrinho
@@ -196,7 +202,7 @@ $(document).ready(function () {
             );
             $(`#${response.produto_id}`).remove();
           }
-          localStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
+          sessionStorage.setItem("cartItem", JSON.stringify(carrinho)); // guarda os itens do carrinho no local storage
         } else {
           $(".result").append(
             `<div class="${response.status}"><span class="fa fa-times-circle"></span>${response.message}</div>`
@@ -219,9 +225,10 @@ $(document).ready(function () {
 // carregar itens do carrinho ao abrir a página
 $("body").ready(function () {
   let cartItem = "";
-  const saveCarrinho = JSON.parse(localStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
+  const saveCarrinho = JSON.parse(sessionStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
   let total = 0;
-
+  let user_id = sessionStorage.getItem("user_id");
+  console.log(user_id);
   // verifica se existem itens no carrinho e preenche os elementos do carrinho
   if (saveCarrinho.length > 0) {
     $("#count").attr("value", saveCarrinho.length);
@@ -254,7 +261,7 @@ $("body").ready(function () {
     `<label for="total" class="total" >Total: <input name="total" id="total" type="text" value="${total.toFixed(
       2
     )}€" readonly></label><input class="checkout-btn" data-user="${
-      saveCarrinho[0]?.user_id ? $(this).attr("data-user") : "null"
+      saveCarrinho[0]?.user_id || user_id
     }" type="button" value="Checkout">`
   );
 });
@@ -262,13 +269,6 @@ $("body").ready(function () {
 /*=============================================================================================================================================================================*/
 
 // abrir o carrinho ao clicar no icone do carrinho
-$(".cart").on("click", function () {
-  if ($(".cart-content").css("display") === "none") {
-    $(".cart-content").css("display", "flex");
-  } else {
-    $(".cart-content").css("display", "none");
-  }
-});
 
 $("body").on("click", ".checkout-btn", function (e) {
   e.preventDefault();
@@ -279,7 +279,7 @@ $("body").on("click", ".checkout-btn", function (e) {
   const urlCheckoutInfo = "pages/cart/checkoutinfo.php";
   const urlCheckout = "pages/cart/orders.php";
   if (notEmpty > 0) {
-    if (user_logged == "null") {
+    if (user_logged === "undefined" || user_logged === "null") {
       console.log("Você precisa estar logado para efetuar o checkout!");
       $("#content").load(urlCheckoutInfo, function (status) {
         if (status === "error") {
@@ -288,12 +288,15 @@ $("body").on("click", ".checkout-btn", function (e) {
           console.log("Página carregada com sucesso!");
         }
       });
-    } else {
+    } else if (user_logged) {
       console.log("Você está logado! Efetuando checkout...");
       $("#content").load(urlCheckout, function (status) {
         if (status === "error") {
           console.log("Error: " + xhr.status + ": " + xhr.statusText);
         } else {
+          $("#cart-content").css("display", "none");
+          $("#count").css("display", "none");
+          $(".cart").css("pointer-events", "none");
           console.log("Página carregada com sucesso!");
         }
       });
@@ -321,18 +324,18 @@ $(document).ready(function () {
       processData: false,
       success: function (response) {
         console.log(formData.get("nome"));
-
+        sessionStorage.setItem("user_id", response.dados_inseridos);
         console.log(response);
         $(".result").text("");
         if (response.sucesso) {
           //carregamento de dados fornecidos pelo utilizador e redirecionamento para a página de pedidos
-          const user_nif = $("#nif").val();
+          const user_id = sessionStorage.getItem("user_id");
           const url = "pages/cart/utilizadorCheckout.php";
 
           $.ajax({
             url: url,
             type: "POST",
-            data: { user_nif: user_nif },
+            data: { user_id: user_id },
             dataType: "json",
             success: function (response) {
               console.log(response);
@@ -342,12 +345,15 @@ $(document).ready(function () {
             `<div class="success"><span class="fa fa-times-circle"></span>${response.sucesso}</div>`
           );
           $(".result").show();
-
+          $(".checkout-btn").attr("data-user", user_id);
           $(".result").hide("");
           $("#content").load("pages/cart/orders.php", function (status) {
             if (status === "error") {
               console.log("Error: " + xhr.status + ":" + xhr.statusText);
             } else {
+              $("#cart-content").css("display", "none");
+              $("#count").css("display", "none");
+              $(".cart").css("pointer-events", "none");
               console.log("Página carregada com sucesso! out ajax");
             }
           });

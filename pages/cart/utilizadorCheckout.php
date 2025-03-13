@@ -9,19 +9,19 @@ error_reporting(E_ALL);
     $post = filter_input_array(INPUT_POST, FILTER_DEFAULT);
     $postFilters = array_map('strip_tags', $post);
 
-    var_dump($postFilters['user_nif']);
+    var_dump($postFilters['user_id']);
     
 
-    $nif = $postFilters['user_nif'];
+    $user_id = $postFilters['user_id'];
     
     try{
 
-    $temp_usre = $conn->prepare("SELECT * FROM users WHERE nif = :nif");
-    $temp_usre->bindParam(':nif', $nif, PDO::PARAM_STR);
+    $temp_usre = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
+    $temp_usre->bindParam(':user_id', $user_id, PDO::PARAM_STR);
     $temp_usre->execute();
     $temp_user = $temp_usre->fetch(PDO::FETCH_ASSOC);
 
-    $user_id = $temp_user['id'];
+    
 
     $inserUser_id = $conn->prepare("UPDATE carrinho SET user_id = :user_id");
     $inserUser_id->bindParam(':user_id', $user_id, PDO::PARAM_INT);

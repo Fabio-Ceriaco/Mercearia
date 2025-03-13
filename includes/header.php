@@ -10,8 +10,8 @@
  
    
 
-    if(isset($_SESSION['id']) && isset($_SESSION['username']) && isset($_SESSION['email']) && isset($_SESSION['tipo'])){
-        $is_logged = $_SESSION['id'];
+    if(isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['email']) && isset($_SESSION['tipo'])){
+        $is_logged = $_SESSION['user_id'];
         $username = $_SESSION['username'];
         $email = $_SESSION['email'];
         $tipo = $_SESSION['tipo'];
@@ -48,6 +48,7 @@
         <div class="cart" >
             <a href="#" class="cart" id="cart"><i class="fa-solid fa-cart-shopping"></i><input id="count" type="text" value="0" readonly></a>
             <div class="cart-content" id="cart-content">
+                <?php var_dump($_SESSION['user_id']); ?>
                 <div class="in-cart">
                     <span class='empty'>Carrinho Vazio</span>
                 </div>
@@ -99,7 +100,7 @@
     
     <section class="login-section">
         <div class="login" id="login">
-        <i class="fas fa-times" id="close"></i>
+        <i class="fas fa-times" id="closeLogin"></i>
         <br>
         <h2>Login</h2>
         <br>

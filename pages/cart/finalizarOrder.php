@@ -10,13 +10,13 @@
         $user_id = $_SESSION['id'];
     }*/
     $user_id = $_SESSION['user_id'];
-
+    var_dump($user_id);
     // Selecionar pedidos do utilizador para obter o id da ordem
     $orders = $conn->prepare("SELECT * FROM orders WHERE user_id = :user_id");
     $orders->bindParam(":user_id", $user_id, PDO::PARAM_INT);
     $orders->execute();
     $orders = $orders->fetchAll(PDO::FETCH_ASSOC);
-    $last_entri = 
+     
     
     // obter os itens da order
     $order_items = $conn->prepare("SELECT * FROM orders_itens JOIN orders ON orders_itens.order_id = orders.id JOIN produtos ON orders_itens.produto_id = produtos.id WHERE orders_itens.order_id = :order_id");

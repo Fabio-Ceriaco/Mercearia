@@ -51,7 +51,7 @@
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if(password_verify($password, $user['password'])) {
-                $_SESSION['id'] = $user['id'];
+                $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['tipo'] = $user['tipo'];

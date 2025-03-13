@@ -1,4 +1,11 @@
+<?php 
+    include './includes/conexao.php';
 
+    $query = "SELECT * FROM categorias";
+    $stmt = $conn ->prepare($query);
+    $stmt -> execute();
+    $categorias = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+?>
          <!-- Pesquisa de produtos -->
         <section id="search-banner">
                 <!--bg-->
@@ -34,42 +41,16 @@
             </div>
 
             <!--box-container-->
+            
             <div class="categorias-container">
-                <!--box-->
-                <a href="#" class="categorias-box">
-                    <img src="./assets/img/fish.png" alt="fish">
-                    <span>Peixe & Carne</span>
-                </a>
-                <!--box-->
-                <a href="#" class="categorias-box">
-                    <img src="./assets/img/Vegetables.png" alt="fish">
-                    <span>Peixe & Carne</span>
-                </a>
-                <!--box-->
-                <a href="#" class="categorias-box">
-                    <img src="./assets/img/medicine.png" alt="fish">
-                    <span>Peixe & Carne</span>
-                </a>
-                <!--box-->
-                <a href="#" class="categorias-box">
-                    <img src="./assets/img/baby.png" alt="fish">
-                    <span>Peixe & Carne</span>
-                </a>
-                <!--box-->
-                <a href="#" class="categorias-box">
-                    <img src="./assets/img/office.png" alt="fish">
-                    <span>Peixe & Carne</span>
-                </a>
-                <!--box-->
-                <a href="#" class="categorias-box">
-                    <img src="./assets/img/beauty.png" alt="fish">
-                    <span>Peixe & Carne</span>
-                </a>
-                <!--box-->
-                <a href="#" class="categorias-box">
-                    <img src="./assets/img/gardening.png" alt="fish">
-                    <span>Peixe & Carne</span>
-                </a>
+                <?php foreach ($categorias as $categoria):?>
+                    <!--box-->
+                    <a href="#" class="categorias-box">
+                        <img src="<?=$categoria['imagem']?>" alt="<?=$categoria['nome']?>">
+                        <span><?=$categoria['nome']?></span>
+                    </a>
+                <?php endforeach;?>
+                
             </div>
         </section>
 

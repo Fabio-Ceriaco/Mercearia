@@ -6,12 +6,12 @@ error_reporting(E_ALL);
     if(!isset($_SESSION)){
         session_start();
     }
-
+    
     $message = null; //mensagem de retorno
     $post = filter_input_array(INPUT_POST, FILTER_DEFAULT); ///filtrar inputs para evitar ataques de SQL Injection
     $postFilters = array_map('strip_tags', $post);//remover tags HTML do input
-    if($_SESSION &&!empty($_SESSION['id'])){
-        $user_id = $_SESSION['id'];
+    if($_SESSION && !empty($_SESSION['user_id'])){
+        $user_id = $_SESSION['user_id'];
         
     }
    

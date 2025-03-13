@@ -1,5 +1,7 @@
 <?php
+    
     include '../../includes/conexao.php';
+
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
     
@@ -28,11 +30,8 @@
         $order_items->bindParam(":user_id", $cart_checkout[0]['user_id'], PDO::PARAM_INT);
         $order_items->bindParam(":total", $total, PDO::PARAM_STR);
         $order_items->execute();
-        
-    }
-    
 
-    $order_items_id = $conn->lastInsertId();
+         $order_items_id = $conn->lastInsertId();
     
     
 
@@ -45,8 +44,16 @@
         $order_items->bindParam(":preco", $items['preco'], PDO::PARAM_STR);
         $order_items->execute();
     }
+        
+    }
     
-    $_SESSION['user_id'] = $cart_checkout[0]['user_id'];
+
+   
+    
+    $user_id = $_SESSION['user_id'] = $cart_checkout[0]['user_id'];
+
+    
+
 
     $conn = null;
 ?>

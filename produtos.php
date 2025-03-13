@@ -35,10 +35,7 @@
         ?>
             <!--box-->
             <div class="produtos-box">
-            <?php if($is_logged):?>
-                    <input type="hidden" id="csrf_token" value="<?=$_SESSION['csrf_token']?>">
-                    <input type="hidden" id="user_id" value="<?=$_SESSION['id']?>">
-                <?php endif;?>
+           
                 <input type="hidden" name="id" value="<?=strip_tags($produto['id'])?>">
                 <img src="<?=$produto['imagem']?>" alt="apple">
                 <strong><?=strip_tags($produto['nome_produto']) ?></strong>

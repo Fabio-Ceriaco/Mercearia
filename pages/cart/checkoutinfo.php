@@ -1,3 +1,5 @@
+
+
 <section class="registo-section">
     <h2>Dados para Envio</h2>
     <i class="fas fa-times" id="close"></i>

@@ -10,6 +10,8 @@ $(document).ready(function () {
       if (status === "error") {
         console.log("Erro ao carregar o conteúdo solicitado.");
       } else {
+        $(".cart").css("pointer-events", "auto");
+        $("#count").css("display", "flex");
         console.log("Página carregada com sucesso");
       }
     });
@@ -25,6 +27,8 @@ $(document).ready(function () {
       if (status === "error") {
         console.log("Erro ao carregar o conteúdo solicitado.");
       } else {
+        $(".cart").css("pointer-events", "auto");
+        $("#count").css("display", "flex");
         console.log("Página carregada com sucesso.");
       }
     });
@@ -50,7 +54,7 @@ $(document).ready(function () {
     }
   });
   //evento botão close login
-  $("#close").click(function (e) {
+  $("#closeLogin").click(function (e) {
     e.preventDefault();
     $(".login-section").css("display", "none");
   });

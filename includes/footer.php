@@ -28,27 +28,6 @@
                     <a href="#"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
-
-            <!--links-->
-            <div class="footer-links">
-                <strong>Product</strong>
-                <ul>
-                    <li><a href="#">Clothes</a></li>
-                    <li><a href="#">Packages</a></li>
-                    <li><a href="#">Popular</a></li>
-                    <li><a href="#">New</a></li>
-                </ul>
-            </div>
-            <!--links-->
-            <div class="footer-links">
-                <strong>Category</strong>
-                <ul>
-                    <li><a href="#">Beauty</a></li>
-                    <li><a href="#">Meats</a></li>
-                    <li><a href="#">Kids</a></li>
-                    <li><a href="#">Clothes</a></li>
-                </ul>
-            </div>
             <!--links-->
             <div class="footer-links">
                 <strong>Contact</strong>
