@@ -77,10 +77,10 @@
         <div class="orderOpcoesPagamento">
             <h2>Opções de Pagamento</h2>
             <div class="opcoes">
-            <img src="./assets/img/paypal.png" alt="paypal">
-            <img src="./assets/img/cartao_credito.png" alt="cartão de crédito">
-            <img src="./assets/img/mbway.png" alt="mbway">
-            <img src="./assets/img/transferencia_bancaria.webp" alt="transferencia">
+            <a href="./pages/formasPagamento/paypal"><img src="./assets/img/paypal.png" alt="paypal"></a>
+            <a href="./pages/formasPagamento/cartaoCredito"><img src="./assets/img/cartao_credito.png" alt="cartão de crédito"></a>
+            <a href="#"><img src="./assets/img/mbway.png" alt="mbway"></a>
+            <a href="#"><img src="./assets/img/transferencia_bancaria.webp" alt="transferencia"></a>
             </div>
         </div>
         </div>

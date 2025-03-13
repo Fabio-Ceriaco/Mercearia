@@ -121,3 +121,16 @@ $(document).ready(function () {
     window.location.href = "./index.php";
   });
 });
+
+//eventos icons de pagamentos
+$(".opcoes a").click(function (e) {
+  e.preventDefault();
+  let page = $(this).attr("href");
+  $("#content").load(page + ".php", function (status) {
+    if (status === "error") {
+      console.log("Erro ao carregar o conteúdo solicitado.");
+    } else {
+      console.log("Página carregada com sucesso.");
+    }
+  });
+});

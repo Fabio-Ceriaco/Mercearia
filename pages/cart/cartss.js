@@ -3,7 +3,9 @@
 $(document).ready(function () {
   $("body").on("click", ".cart-btn", function (e) {
     e.preventDefault();
-
+    const user_id = sessionStorage.getItem("user_id");
+    console.log(user_id);
+    $(".checkout-btn").attr("data-user", user_id);
     const id = $(this).attr("data-id");
     const url = "pages/cart/cart.php";
     $.ajax({
@@ -23,8 +25,10 @@ $(document).ready(function () {
             `<div class="${response.status}"><span class="fa fa-check-circle"></span>${response.message}</div>`
           ); // mostra o resultado
           $(".result").show();
+
           $("#count").attr("value", response.count); // atualiza o contador de itens no carrinho
           $("#total").attr("value", `${response.total} €`); // atualiza o preço total do carrinho
+
           let cartItem = "";
           let carrinho = JSON.parse(sessionStorage.getItem("cartItem")) || []; // recupera os itens do carrinho caso existam
           if (response.cart_items[0].id) {

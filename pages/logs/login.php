@@ -58,6 +58,7 @@
                 $_SESSION['imagem'] = $user['imagem_path'];
                 $mensagem = [
                     'message' => 'Login efectuado com sucesso!',
+                    'loged_user' => $user['id'],
                     'status' => 'success',
                     'redirect' => ''
                 ];

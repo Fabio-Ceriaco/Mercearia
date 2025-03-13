@@ -5,12 +5,12 @@
     if(!isset($_SESSION)){
         session_start();
     }
-    if(!isset($_SESSION) || empty($_SESSION['id'])){
+    if(!isset($_SESSION) || empty($_SESSION['user_id'])){
 
         header('Location:../../home.php');
         exit();
     }
-        $user_id = $_SESSION['id'];
+        $user_id = $_SESSION['user_id'];
         $query = "SELECT * FROM users WHERE id = :id";
         $stmt = $conn -> prepare($query);
         $stmt -> bindParam(':id', $user_id);

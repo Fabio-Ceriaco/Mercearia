@@ -7,6 +7,8 @@
     
     session_start();
 
+     
+    
     $cart_checkout = $conn->prepare("SELECT * FROM carrinho JOIN produtos ON carrinho.produto_id = produtos.id JOIN users ON carrinho.user_id = users.id");
     $cart_checkout->execute();
     $cart_checkout = $cart_checkout->fetchAll(PDO::FETCH_ASSOC);
@@ -19,11 +21,30 @@
     $checkOrders = $conn->prepare("SELECT * FROM orders WHERE user_id = :user_id");
     $checkOrders->bindParam(":user_id", $cart_checkout[0]['user_id'], PDO::PARAM_INT);
     $checkOrders->execute();
+    $checkOrders = $checkOrders->fetchAll(PDO::FETCH_ASSOC);
+    var_dump($checkOrders);
 
-    if($checkOrders->rowCount() > 0){
+    if(count($checkOrders) > 0){
         $clearOrderUser = $conn->prepare("DELETE FROM orders WHERE user_id = :user_id");
         $clearOrderUser->bindParam(":user_id", $cart_checkout[0]['user_id'], PDO::PARAM_INT);
         $clearOrderUser->execute();
+
+        $order_items = $conn -> prepare ("INSERT INTO orders (user_id, total) VALUES (:user_id, :total)");
+        $order_items->bindParam(":user_id", $cart_checkout[0]['user_id'], PDO::PARAM_INT);
+        $order_items->bindParam(":total", $total, PDO::PARAM_STR);
+        $order_items->execute();
+
+        $order_items_id = $conn->lastInsertId();
+
+        //inserir dados na tabela order_items
+        foreach($cart_checkout as $items){
+            $order_items = $conn -> prepare ("INSERT INTO orders_itens (order_id, produto_id, quantidade, preco) VALUES (:order_id, :produto_id, :quantidade, :preco)");
+            $order_items->bindParam(":order_id", $order_items_id, PDO::PARAM_INT);
+            $order_items->bindParam(":produto_id", $items['produto_id'], PDO::PARAM_INT);
+            $order_items->bindParam(":quantidade", $items['quantidade'], PDO::PARAM_INT);
+            $order_items->bindParam(":preco", $items['preco'], PDO::PARAM_STR);
+            $order_items->execute();
+        }
     }else{
         // inserir dados na tabela orders
         $order_items = $conn -> prepare ("INSERT INTO orders (user_id, total) VALUES (:user_id, :total)");
@@ -48,10 +69,9 @@
     }
     
 
-   
-    
     $user_id = $_SESSION['user_id'] = $cart_checkout[0]['user_id'];
-
+    
+   
     
 
 

@@ -18,6 +18,8 @@ $(document).ready(function () {
       success: function (response) {
         $(".result").text("");
         if (response.status == "success") {
+          console.log(response.loged_user);
+          sessionStorage.setItem("user_id", response.loged_user);
           $(".result").append(
             `<div class="${response.status}"><span class="fa fa-check-circle"></span>${response.message}</div>`
           );
